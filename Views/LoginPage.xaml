@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoingOutMobile.Views.LoginPage"
+             Title="Inicie Sesión"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource Primary}"
+             >
+
+
+    <VerticalStackLayout 
+        VerticalOptions="Center"
+        Margin="20,0,20,0"
+        Spacing="20"
+        Style="{StaticResource Secondary}"
+        >
+
+        <Image
+            Source="goingout_logo"
+            HorizontalOptions="Center"
+            HeightRequest="130"
+            WidthRequest="300"
+            />
+
+
+        <Label 
+            Text="Iniciá sesión con tu e-mail"
+            TextColor="Black"
+            FontSize="Large"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Label
+            Text="Solo podrás usar este método si ya tenias registrada una cuenta."
+            TextColor="Black"
+            FontSize="Small"
+            HorizontalOptions="Center"            
+            />
+
+        <Entry
+            Text="{Binding UserName}"
+            Placeholder="E-mail:"
+            PlaceholderColor="Black"
+            />
+
+        <Entry
+            Text="{Binding Password}"
+            Placeholder="Contraseña:"
+            IsPassword="True"
+            PlaceholderColor="Black"
+            />
+
+        <Button
+            Text="Iniciar Sesión"
+            HeightRequest="50"
+            FontSize="Medium"
+            BackgroundColor="DarkOrange"
+            Command="{Binding LoginMethodCommand}"
+            />
+
+
+
+    </VerticalStackLayout>
+
+
+</ContentPage>
