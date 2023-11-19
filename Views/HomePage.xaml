@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:GoingOutMobile.Models.Restaurant"
+             xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
+             x:DataType="vm:HomeViewModel"
+             x:Class="GoingOutMobile.Views.HomePage"
+             Title="HomePage">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+             Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
+
+        <ScrollView>
+            <Grid Margin="20" RowSpacing="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <VerticalStackLayout Grid.Row="0" Spacing="5">
+
+                    <HorizontalStackLayout Spacing="20" Padding="10,10,10,10" >
+                        <Image Source="profile" HeightRequest="30" WidthRequest="30"  />
+                        <VerticalStackLayout>
+                            <Label  Text="{Binding NombreUsuario}" FontSize="Large"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <Frame Grid.Row="1" Padding="15">
+                    <HorizontalStackLayout Spacing="20">
+                        <Image Source="search_icon" 
+                           Aspect="AspectFit" 
+                           HeightRequest="25"
+                           WidthRequest="25"
+                           />
+                        <Label 
+                        Text="Busqueda"
+                        VerticalOptions="Center"
+                        />
+                    </HorizontalStackLayout>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding TapBusquedaRestaurantCommand}"/>
+                    </Frame.GestureRecognizers>
+                </Frame>
+
+                <VerticalStackLayout Grid.Row="2" Spacing="20">
+                    <Label 
+                    Text="Categorias de Restaurant"
+                    FontSize="Medium"
+                    />
+
+                    <CollectionView
+                    SelectionMode="Single"
+                    HeightRequest="50"
+                    ItemsSource="{Binding CategoriesMobiles}"
+                    SelectedItem="{Binding CategoriesMobileSelected}"
+                    SelectionChangedCommand="{Binding CategoryEventSelectedCommand}"
+                    BackgroundColor="White"
+                    >
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout ItemSpacing="10"  Orientation="Horizontal"/>
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:CategoriesMobileResponse">
+                                <Border
+                                Padding="16,8"
+                                HorizontalOptions="Center"
+                                >
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10,10,10,10"  />
+                                    </Border.StrokeShape>
+
+                                    <HorizontalStackLayout Spacing="5" HeightRequest="30">
+                                        <Image 
+                                        Aspect="AspectFit"
+                                        HeightRequest="30"
+                                        WidthRequest="30"
+                                        Source="{Binding ImgUrl}"
+                                        />
+                                        <Label 
+                                        VerticalOptions="Center"
+                                        FontSize="Medium"
+                                        Text="{Binding Name}"
+                                        />
+                                    </HorizontalStackLayout>
+
+
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+
+                    </CollectionView>
+
+
+                </VerticalStackLayout>
+
+                <!--<VerticalStackLayout Grid.Row="3" Spacing="20">
+                <Label 
+                    Text="Mis Inmuebles Favoritos"
+                    FontSize="Large"
+                    />
+                <CollectionView 
+                    HeightRequest="350"
+                    SelectionMode="Single"
+                    ItemsSource="{Binding FavoriteInmuebles}"
+                    >
+
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:InmuebleResponse">
+                            <Frame 
+                                CornerRadius="25"
+                                Padding="15"
+                                BackgroundColor="White"
+                                >
+                                <Grid RowSpacing="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Frame
+                                        Grid.Row="0"
+                                        HeightRequest="200"
+                                        WidthRequest="250"
+                                        CornerRadius="25"
+                                        Padding="0"
+                                        IsClippedToBounds="True"
+                                        >
+                                        <Image 
+                                            Aspect="Fill"
+                                            Source="{Binding ImagenUrl}"
+                                            />
+                                    </Frame>
+                                    <Label 
+                                        Grid.Row="1"
+                                        Text="{Binding Nombre}"
+                                        FontSize="Subtitle"
+                                        />
+                                    <Label 
+                                        Grid.Row="2"
+                                        Text="{Binding Detalle}"
+                                        FontSize="Small"
+                                         WidthRequest="250"
+                                         LineBreakMode="TailTruncation"
+                                        />
+                                    <Label 
+                                        Grid.Row="3"
+                                        Text="{Binding Precio, StringFormat='{0:C}'}"
+                                        FontSize="Subtitle"
+                                        TextColor="#1d94ab"
+                                        />
+
+                                </Grid>
+
+
+                            </Frame>
+                        </DataTemplate>
+
+                    </CollectionView.ItemTemplate>
+
+
+                </CollectionView>
+
+
+            </VerticalStackLayout>-->
+
+            </Grid>
+
+        </ScrollView>
+
+    </RefreshView>
+
+
+</ContentPage>

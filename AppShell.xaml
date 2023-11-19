@@ -5,13 +5,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:GoingOutMobile.Views"
     xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
-    Shell.FlyoutBehavior="Flyout"
-    xmlns:info="clr-namespace:Microsoft.Maui.ApplicationModel;assembly=Microsoft.Maui.Essentials">
-    <!--Shell.NavBarIsVisible="false">-->
-
+    xmlns:info="clr-namespace:Microsoft.Maui.ApplicationModel;assembly=Microsoft.Maui.Essentials"
+    FlyoutBackgroundColor="{StaticResource Secondary}"
+    Shell.TabBarIsVisible="false"
+    >
+    <!--Shell.NavBarIsVisible="false">   Shell.FlyoutBehavior="Flyout" -->
 
     <Shell.FlyoutHeader>
-            <Image Source="dotnet_bot.svg" WidthRequest="120" Margin="10"/>
+        <VerticalStackLayout BackgroundColor="{StaticResource Secondary}" >
+            <Image Source="foodtrack_splash.png" WidthRequest="120" Margin="30" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
     </Shell.FlyoutHeader>
 
     <Shell.FlyoutFooter>
@@ -20,40 +23,50 @@
             <Label Text="{x:Static info:AppInfo.VersionString}"/>
         </VerticalStackLayout>
     </Shell.FlyoutFooter>
-
-    <MenuItem Text="{Binding probando}"/>
-
+    
     <ShellContent
-            Title="MainPage"
-            ContentTemplate="{DataTemplate views:MainPage}"
-            Route="MainPage"       
+            Title="Inicio"
+            ContentTemplate="{DataTemplate views:HomePage}"
+            Route="HomePage"   
+            Icon="start"
         />
+
 
     <ShellContent
             Title="Mis Favoritos"
             ContentTemplate="{DataTemplate views:FavoritesPage}"
-            Route="FavoritesPage"       
+            Route="FavoritesPage" 
+            Icon="favorites"
         />
 
     <ShellContent
             Title="UltimosVisitados"
             ContentTemplate="{DataTemplate views:LastVisitedPage}"
-            Route="LastVisitedPage"       
+            Route="LastVisitedPage" 
+            Icon="lastvisited"
         />
 
     <ShellContent
             Title="MisGastos"
             ContentTemplate="{DataTemplate views:MyExpensesPage}"
-            Route="MyExpensesPage"       
-        />
-    
-    
-    <MenuItem 
-        Text="Cerrar Sesión"
-        Clicked="CerrarSesion"
+            Route="MyExpensesPage"   
+            Icon="expenses"
         />
 
-    <FlyoutItem Title="Tabs">
+    <ShellContent 
+           Title="Configuracion"
+           ContentTemplate="{DataTemplate views:SettingsPage}"
+           Route="SettingsPage"
+           Icon="settings_icon"
+           />
+
+
+    <!--<MenuItem 
+        Text="Cerrar Sesión"
+        Clicked="CerrarSesion"
+        />-->
+
+    <!--<FlyoutItem Title="Tabs">
         <Tab Title="Resumen" Icon="home_icon">
             <ShellContent 
                 Title="Resumen"
@@ -73,13 +86,19 @@
         <Tab Title="Configuracion" Icon="settings_icon">
             <ShellContent 
                 Title="Configuracion"
-                ContentTemplate="{DataTemplate views:MyExpensesPage}"
-                Route="MyExpensesPage"
+                ContentTemplate="{DataTemplate views:SettingsPage}"
+                Route="SettingsPage"
+                Icon="settings_icon"
                 />
         </Tab>
 
 
-    </FlyoutItem>
+    </FlyoutItem>-->
 
+
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior 
+        Command="{Binding Back_Command}"/>
+    </Shell.BackButtonBehavior>-->
 
 </Shell>

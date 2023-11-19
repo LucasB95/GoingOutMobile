@@ -3,12 +3,14 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace GoingOutMobile.Views;
 
-public partial class MainPage : ContentPage
+public partial class HomePage : ContentPage
 {
-    public MainPage(MainPageViewModel viewModel)
+    HomeViewModel _homeViewModel;
+    public HomePage(HomeViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
+        _homeViewModel = viewModel;
     }
 
     protected override async void OnAppearing()
@@ -20,13 +22,18 @@ public partial class MainPage : ContentPage
             var jwt_token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
             var time = jwt_token.ValidTo;
             //var tokenUsuario = jwt_token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Rsa)?.Value;
-
+            var tiempoToken = DateTime.Compare(time, DateTime.UtcNow);
             if (time < DateTime.UtcNow)
             {
                 await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
             }
+            else
+            {
+                await _homeViewModel.RefreshCommand.ExecuteAsync(this);
 
-            (Shell.Current as AppShell).IsLogged = true;
+                (Shell.Current as AppShell).IsLogged = true;
+            }
+
         }
         else if (String.IsNullOrEmpty(accessToken))
         {
@@ -35,4 +42,5 @@ public partial class MainPage : ContentPage
             await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
         }
     }
+
 }

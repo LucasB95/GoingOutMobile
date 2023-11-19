@@ -26,7 +26,8 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+			})
+			.UseMauiMaps();
 
 		builder.Configuration.AddConfiguration(config);
 
@@ -35,15 +36,37 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<INavegacionService, NavegacionService>();
 		builder.Services.AddSingleton<IGenericQueriesServices, GenericQueriesServices>();
+
 		builder.Services.AddSingleton<SecurityService>();
-		builder.Services.AddSingleton<SecurityService>();
+
 		builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
-		builder.Services.AddTransient <MainPageViewModel>();
+
+        builder.Services.AddTransient<CreateUserViewModel>();
+        builder.Services.AddTransient<CreateUserPage>();
+
+        builder.Services.AddTransient <MainPageViewModel>();
         builder.Services.AddTransient<MainPage>();
+
+        builder.Services.AddTransient<HomeViewModel>();
+        builder.Services.AddTransient<HomePage>();
+
+        builder.Services.AddTransient<SettingsViewModel>();
+        builder.Services.AddTransient<SettingsPage>();
+
+        builder.Services.AddTransient<RestaurantListViewModel>();
+        builder.Services.AddTransient<RestaurantListPage>();
+
+        builder.Services.AddTransient<RestaurantDetailViewModel>();
+        builder.Services.AddTransient<RestaurantDetailPage>();
 
 
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
+        Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+
+        Routing.RegisterRoute(nameof(RestaurantListPage), typeof(RestaurantListPage));
+        Routing.RegisterRoute(nameof(RestaurantDetailPage), typeof(RestaurantDetailPage));
 
 #if DEBUG
         builder.Logging.AddDebug();

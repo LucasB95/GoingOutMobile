@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace GoingOutMobile.Models.Login
 {
-    public class LoginRequest
+    public class CreateUserRequest
     {
+        public string name { get; set; }
+        public string email { get; set; }
+        public string pass { get; set; }    
         public string userName { get; set; }
-        public string userPassword { get; set; }
-    }
-    public class LogoutRequest
-    {
-        public string userId { get; set; }
     }
 }

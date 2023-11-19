@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoingOutMobile.Views.SettingsPage"
+             Title="Configuracion de App">
+
+
+    <VerticalStackLayout Margin="20" Spacing="20">
+
+        <VerticalStackLayout>
+            <Image
+                Source="profile.png"
+                SemanticProperties.Description="foto de perfil"
+                HeightRequest="200"
+                HorizontalOptions="Center"                
+                />
+
+            <Label  Text="{Binding NombreUsuario}" FontSize="Medium" HorizontalOptions="Center" Padding="10"/>
+
+        </VerticalStackLayout>
+
+        <HorizontalStackLayout Spacing="20">
+            <Image Source="email" HeightRequest="30" WidthRequest="30"  />
+            <VerticalStackLayout>
+                <Label  Text="Correo eléctronico" FontSize="Medium" HorizontalOptions="Start" FontAttributes="Bold"/>
+
+                <Label  Text="{Binding Email}" FontSize="Medium" HorizontalOptions="Start"/>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="20">
+            <Image Source="password" HeightRequest="30" WidthRequest="30"  />
+            <VerticalStackLayout>
+                <Label  Text="Cambiar Contraseña" FontSize="Medium" HorizontalOptions="Start" FontAttributes="Bold"/>
+
+                <Label  Text="***********************" FontSize="Medium" HorizontalOptions="Start"/>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="20">
+            <Image Source="faq_icon" HeightRequest="30" WidthRequest="30"  />
+            <Label VerticalOptions="Center" FontSize="Medium" Text="Ayuda y Soporte" />
+        </HorizontalStackLayout>
+
+        <HorizontalStackLayout Spacing="20">
+            <Image Source="signoff" HeightRequest="30" WidthRequest="30"  />
+            <Label VerticalOptions="Center" FontSize="Medium" Text="Cerrar sesión" />
+            <HorizontalStackLayout.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding SalirSesionCommand}" />
+            </HorizontalStackLayout.GestureRecognizers>
+        </HorizontalStackLayout>
+
+
+    </VerticalStackLayout>
+
+
+</ContentPage>

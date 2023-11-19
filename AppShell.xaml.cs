@@ -1,26 +1,41 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using GoingOutMobile.ViewModels;
 using GoingOutMobile.Views;
+using Microsoft.Maui.Controls;
+using System.IdentityModel.Tokens.Jwt;
+using System.Windows.Input;
 
 namespace GoingOutMobile;
 
 public partial class AppShell : Shell
-{   
-    public string probando;
+{
+
+    private static bool chequed = false;
+
+    private static bool isVisible = false;
     public AppShell()
     {
         InitializeComponent();
-
-    }
-    protected override async void OnAppearing()
-    {
-        var probando = Preferences.Get("Name", string.Empty);
     }
 
-        private async void CerrarSesion(object sender, EventArgs e)
+    public bool IsLogged
     {
-        Preferences.Set("tokenGoingOut", string.Empty);
-        var uri = $"//{nameof(MainPage)}";
-        await Shell.Current.GoToAsync(uri);
+        get => (bool)GetValue(IsLoggedProperty);
+        set => SetValue(IsLoggedProperty, value);
     }
+
+    public static readonly BindableProperty IsLoggedProperty =
+    BindableProperty.Create("IsLogged", typeof(bool), typeof(AppShell), false, propertyChanged: IsLogged_PropertyChanged);
+
+    private static void IsLogged_PropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        chequed = (bool)newValue ? true : false;
+        ChangeStatus();
+    }
+
+    public static void ChangeStatus()
+    {
+        Shell.Current.FlyoutBehavior = chequed ? FlyoutBehavior.Flyout : FlyoutBehavior.Disabled;
+    }
+
 }

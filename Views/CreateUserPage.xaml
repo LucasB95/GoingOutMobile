@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GoingOutMobile.Views.LoginPage"
-             Title="Inicie Sesión"
+             x:Class="GoingOutMobile.Views.CreateUserPage"
+             Title="Registro de nuevo Usuario"
              Shell.NavBarIsVisible="False"
              BackgroundColor="{StaticResource Primary}"
              >
-
-
+    
     <VerticalStackLayout 
         VerticalOptions="Center"
         Margin="20,0,20,0"
@@ -20,8 +19,9 @@
             WidthRequest="300"
             />
 
+
         <Label 
-            Text="Iniciá sesión con tu e-mail"
+            Text="Ingresá tus datos para crear tu cuenta"
             TextColor="Black"
             FontSize="Medium"
             FontAttributes="Bold"
@@ -29,15 +29,35 @@
             HorizontalOptions="Center" />
 
         <Label
-            Text="Solo podrás usar este método si ya tenias registrada una cuenta."
+            Text="Recorda que no podes crear una nueva cuenta si tu email/usuario ya estan registrados."
             TextColor="Black"
             FontSize="Micro"
             HorizontalOptions="Center"            
             />
 
         <Entry
-            Text="{Binding UserName}"
+            Text="{Binding Name}"
+            Placeholder="Nombre:"
+            PlaceholderColor="Black"
+            MaxLength="200"
+            MinimumWidthRequest="350" 
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            />
+
+        <Entry
+            Text="{Binding Email}"
             Placeholder="E-mail:"
+            PlaceholderColor="Black"
+            MaxLength="200"
+            MinimumWidthRequest="350" 
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            />
+
+        <Entry
+            Text="{Binding UserName}"
+            Placeholder="Nombre de Usuario:"
             PlaceholderColor="Black"
             MaxLength="200"
             MinimumWidthRequest="350" 
@@ -67,59 +87,30 @@
 
         </HorizontalStackLayout>
 
-        <VerticalStackLayout>
-
-            <Border StrokeThickness="3"
-                StrokeShape="RoundRectangle 40,0,0,40"
-                Background="{StaticResource Secondary}"                
-                WidthRequest="350"
-                HeightRequest="50">    
-                <Border.Stroke>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#002a41"
-                          Offset="0.1" />
-                        <GradientStop Color="#037eb5"
-                          Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Stroke>
-                <Label Text="Ingresar"
-                   TextColor="Teal"
-                   FontSize="Medium"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LoginMethodCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
-
-            <Border StrokeThickness="3"
+        <Border StrokeThickness="3"
                 StrokeShape="RoundRectangle 0,40,40,0"
                 Background="{StaticResource Secondary}"
                 WidthRequest="350"
-                HeightRequest="50">    
-                <Border.Stroke>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#037eb5"
+                HeightRequest="50">
+            <Border.Stroke>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="#037eb5"
                           Offset="0.1" />
-                        <GradientStop Color="#002a41"
+                    <GradientStop Color="#002a41"
                           Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Stroke>
-                <Label Text="Regístrate"
+                </LinearGradientBrush>
+            </Border.Stroke>
+            <Label Text="Registrarme"
                    TextColor="Teal"
                    FontSize="Medium"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
-            
-        </VerticalStackLayout>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
+            </Border.GestureRecognizers>
+        </Border>
 
     </VerticalStackLayout>
-
-
+    
 </ContentPage>
