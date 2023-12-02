@@ -7,96 +7,217 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using GoingOutMobile.Models.Restaurant;
+using System.IdentityModel.Tokens.Jwt;
+using GoingOutMobile.Views;
+using GoingOutMobile.Services.Interfaces;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GoingOutMobile.Services
 {
-    public class RestaurantService
+    public class RestaurantService : IRestaurantService
     {
         private HttpClient client;
         private Settings settings;
 
-        public RestaurantService(HttpClient client, IConfiguration configuration)
+        private readonly INavegacionService _navegacionService;
+
+        public RestaurantService(HttpClient client, IConfiguration configuration, INavegacionService navegacionService)
         {
             this.client = client;
+            _navegacionService = navegacionService;
 
             settings = configuration.GetRequiredSection(nameof(Settings)).Get<Settings>();
-
         }
 
-        //public async Task<bool> Login(string username, string password)
-        //{
-        //    client.DefaultRequestHeaders.Clear();
-        //    client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
-        //    client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+        public async Task ValidaToken()
+        {
+            var accessToken = Preferences.Get("tokenGoingOut", string.Empty);
 
-        //    var url = $"{settings.UrlBase}/Authentication/Login";
+            if (accessToken != null && !String.IsNullOrEmpty(accessToken))
+            {
+                var jwt_token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+                var time = jwt_token.ValidTo;
 
-        //    var loginRequest = new LoginRequest
-        //    {
-        //        userName = username,
-        //        userPassword = password
-        //    };
+                var tiempoToken = DateTime.Compare(time, DateTime.UtcNow);
+                if (time < DateTime.UtcNow)
+                {
+                    var uri = $"{nameof(HomePage)}";
+                    await _navegacionService.GoToAsync(uri);
+                }
 
-        //    var json = JsonConvert.SerializeObject(loginRequest);
-        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+        }
 
-        //    var response = await client.PostAsync(url, content);
+        public async Task<RestaurantResponse> GetClient(string idRestaurant)
+        {
+            await ValidaToken();
 
-        //    if (!response.IsSuccessStatusCode) return false;
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
 
-        //    var jsonResult = await response.Content.ReadAsStringAsync();
+            var url = $"{settings.UrlBase}/Clients/GetClient";
 
-        //    var resultado = JsonConvert.DeserializeObject<UserResponse>(jsonResult);
-
-        //    if (resultado != null && resultado.message.Contains("MSG_LOGIN_OK"))
-        //    {
-        //        Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
-        //        Preferences.Set("IdUser", resultado.id);
-        //        Preferences.Set("userName", loginRequest.userName);
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
+            var json = JsonConvert.SerializeObject(idRestaurant);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-        //}
+            var response = await client.PostAsync(url, content);
 
-        //public async Task<bool> Logout(string IdUser)
-        //{
-        //    client.DefaultRequestHeaders.Clear();
-        //    client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-        //    client.DefaultRequestHeaders.Authorization = new
-        //    AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
 
-        //    var url = $"{settings.UrlBase}/Authentication/Logout";
+            var jsonResult = await response.Content.ReadAsStringAsync();
 
-        //    var logoutRequest = new LogoutRequest
-        //    {
-        //        userId = IdUser
-        //    };
+            return JsonConvert.DeserializeObject<RestaurantResponse>(jsonResult);
+        }
 
-        //    var json = JsonConvert.SerializeObject(logoutRequest);
-        //    var content = new StringContent(json, Encoding.UTF8, "application/json");
+        #region Favorites
+        public async Task<List<RestaurantResponse>> GetFavorites(string idUser)
+        {
+            await ValidaToken();
 
-        //    var response = await client.PostAsync(url, content);
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
 
-        //    if (!response.IsSuccessStatusCode) return false;
+            var uri = $"{settings.UrlBase}/Favorites/{idUser}";
 
-        //    var jsonResult = await response.Content.ReadAsStringAsync();
+            var resultado = await client.GetAsync(uri);
 
-        //    var resultado = JsonConvert.DeserializeObject<LogoutResponse>(jsonResult);
+            if (!resultado.IsSuccessStatusCode) return new List<RestaurantResponse>();
 
-        //    if (resultado != null && resultado.DESCRIPCION_DS.Contains("MSG_LOGOUT_OK"))
-        //    {
-        //        return true;
-        //    }
+            var jsonResult = await resultado.Content.ReadAsStringAsync();
 
-        //    return false;
+            return JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
+        }
+        public async Task<bool> SaveFavorite(FavoriteRequest favoriteRequest)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var uri = $"{settings.UrlBase}/Favorites/AddFavorites";
+
+            if (favoriteRequest == null
+                || String.IsNullOrEmpty(favoriteRequest.userId)
+                || String.IsNullOrEmpty(favoriteRequest.clientsId))
+            {
+                return false;
+            }
+
+            var json = JsonConvert.SerializeObject(favoriteRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-        //}
+            var response = await client.PostAsync(uri, content);
+
+            if (!response.IsSuccessStatusCode) return false;
+
+            return true;
+        }
+        public async Task<bool> DeleteFavorite(FavoriteRequest favoriteRequest)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var uri = $"{settings.UrlBase}/Favorites/DelFavorites";
+
+            if (favoriteRequest == null
+                || String.IsNullOrEmpty(favoriteRequest.userId)
+                || String.IsNullOrEmpty(favoriteRequest.clientsId))
+            {
+                return false;
+            }
+
+            var json = JsonConvert.SerializeObject(favoriteRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync(uri, content);
+
+            if (!response.IsSuccessStatusCode) return false;
+
+            return true;
+        }
+        #endregion
+
+        public async Task<List<CategoriesMobileResponse>> GetCategories()
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var uri = $"{settings.UrlBase}/Categories";
+
+            var resultado = await client.GetAsync(uri);
+
+            var jsonResult = await resultado.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<List<CategoriesMobileResponse>>(jsonResult);
+        }
+        public async Task<IEnumerable<RestaurantResponse>> GetCategoriesClientes(string nameCategory)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var url = $"{settings.UrlBase}/Clients/GetCategories";
+
+            if (string.IsNullOrEmpty(nameCategory))
+            {
+                throw new ArgumentNullException(nameof(nameCategory));
+            }
+
+            var json = JsonConvert.SerializeObject(nameCategory);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
+        }
+        public async Task<MenuResponse> GetClientMenu(string idRestaurant)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var url = $"{settings.UrlBase}/Clients/GetClientMenu";
+
+            var json = JsonConvert.SerializeObject(idRestaurant);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<MenuResponse>(jsonResult);
+        }
     }
 }

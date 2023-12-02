@@ -8,7 +8,121 @@
              Title="Restaurantes por categoria">
 
 
-    <CollectionView
+    <AbsoluteLayout VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
+        <!--<ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">-->
+        <VerticalStackLayout 
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
+                >
+
+            <CollectionView
+        Margin="10"
+        SelectionMode="Single"
+        ItemsSource="{Binding Restaurant}"
+        SelectedItem="{Binding RestaurantSelected, Mode=TwoWay}"
+        >
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+
+                    <DataTemplate x:DataType="model:RestaurantResponse">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="6*" />
+                            </Grid.ColumnDefinitions>
+                            <Frame 
+                        Grid.Column="0"
+                        CornerRadius="10"   
+                        Padding="0"
+                        IsClippedToBounds="True"
+                           >
+                                <Image 
+                            HeightRequest="150"
+                            WidthRequest="150"
+                            Aspect="Fill"
+                            Source="foto_resto.png"
+                            />
+                            </Frame>
+                            <StackLayout 
+                        Grid.Column="1" 
+                        Padding="15"
+                        Spacing="10"
+                                 >
+                                <Label 
+                            FontSize="Small"
+                            Text="{Binding BusinessName}"
+                            />
+                                <HorizontalStackLayout>
+                                    <Label 
+                            FontSize="Small"
+                            Padding="0,0,5,0"
+                            Text="{Binding Adress.Province}"
+                            />
+                                    <Label 
+                            FontSize="Small"
+                            Text="{Binding Adress.Location}"
+                            />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Padding="0,0,0,0">
+                                    <Label 
+                            FontSize="Small"
+                            Text="{Binding Adress.Street}"
+                            Padding="0,0,5,0"
+                            />
+                                    <Label 
+                            FontSize="Small"
+                            Text="{Binding Adress.Numeration}"
+                            />
+
+                                </HorizontalStackLayout>
+                                <Label 
+                            FontSize="Small"
+                            Text="{Binding Adress.PC}"
+                            />
+                            </StackLayout>
+                        </Grid>
+
+                    </DataTemplate>
+
+                </CollectionView.ItemTemplate>
+
+
+
+            </CollectionView>
+
+
+        </VerticalStackLayout>
+        <!--</ScrollView>-->
+        <AbsoluteLayout
+                    AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    IsVisible="True">
+            <ActivityIndicator Color="Teal"
+                           AbsoluteLayout.LayoutBounds="0.5,0.5,0.1,0.1"
+                           AbsoluteLayout.LayoutFlags="All"
+                           IsVisible="True"
+                           IsRunning="{Binding IsActivity}"/>
+        </AbsoluteLayout>
+        
+    </AbsoluteLayout>
+
+
+
+    <!--<VerticalStackLayout>
+
+
+        <ActivityIndicator IsRunning="{Binding IsActivity}" Color="Teal"  />
+        
+        <CollectionView
         Margin="10"
         SelectionMode="Single"
         ItemsSource="{Binding Restaurant}"
@@ -19,6 +133,7 @@
         </CollectionView.ItemsLayout>
 
         <CollectionView.ItemTemplate>
+            
             <DataTemplate x:DataType="model:RestaurantResponse">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -34,7 +149,7 @@
                         <Image 
                             HeightRequest="160"
                             Aspect="Fill"
-                            Source="foodtrack_splash.png"
+                            Source="foto_resto.png"
                             />
                     </Frame>
                     <StackLayout 
@@ -80,8 +195,12 @@
 
         </CollectionView.ItemTemplate>
 
+            
 
     </CollectionView>
+        
+    </VerticalStackLayout>-->
+    
 
 
 

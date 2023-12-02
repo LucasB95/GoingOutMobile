@@ -36,8 +36,9 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton<INavegacionService, NavegacionService>();
 		builder.Services.AddSingleton<IGenericQueriesServices, GenericQueriesServices>();
+        builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
 
-		builder.Services.AddSingleton<SecurityService>();
+        builder.Services.AddSingleton<SecurityService>();
 
 		builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();

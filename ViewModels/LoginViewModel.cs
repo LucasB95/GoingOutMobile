@@ -30,13 +30,14 @@ namespace GoingOutMobile.ViewModels
         [ObservableProperty]
         private string name;
 
+        [ObservableProperty]
+        private bool isActivity = false;
+
         private readonly SecurityService _securityService;
         private HomeViewModel _homeViewModel;
 
         private readonly IGenericQueriesServices _genericQueriesServices;
         private readonly INavegacionService _navegacionService;
-
-
 
         public LoginViewModel(IConnectivity connectivity, SecurityService securityService, IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService, HomeViewModel homeViewModel)
         {
@@ -58,6 +59,8 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand(CanExecute = nameof(StatusConnection))]
         private async Task LoginMethod()
         {
+            IsActivity = true;
+
             var resultado = await _securityService.Login(UserName, Password);
 
             if (resultado)
@@ -68,6 +71,7 @@ namespace GoingOutMobile.ViewModels
                 if (Persona != null)
                 {
                     Preferences.Set("Email", Persona.Email);
+                    Preferences.Set("UserId", Persona.UserId);
 
                     Application.Current.MainPage = new AppShell();
                 }
@@ -76,6 +80,8 @@ namespace GoingOutMobile.ViewModels
             {
                 await Shell.Current.DisplayAlert("Mensaje", "Ingreso credenciales erroneas", "Aceptar");
             }
+
+            IsActivity = false;
         }
         private bool StatusConnection()
         {

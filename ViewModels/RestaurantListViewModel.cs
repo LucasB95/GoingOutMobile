@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using GoingOutMobile.Models.Restaurant;
+using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
 using GoingOutMobile.Views;
 using System;
@@ -19,42 +20,53 @@ namespace GoingOutMobile.ViewModels
         [ObservableProperty]
         ObservableCollection<RestaurantResponse> restaurant;
 
+        [ObservableProperty]
+        private string nameCategory;
+
+        [ObservableProperty]
+        private bool isActivity = false;
+
         private readonly INavegacionService _navegacionService;
 
         private readonly IGenericQueriesServices _genericQueriesServices;
+        private readonly IRestaurantService _restaurantService;
 
-        public RestaurantListViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices)
+        public RestaurantListViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices, IRestaurantService restaurantService)
         {
             _navegacionService = navegacionService;
             _genericQueriesServices = genericQueriesServices;
             PropertyChanged += RestaurantListViewModel_PropertyChanged;
+            _restaurantService = restaurantService;
         }
 
         private async void RestaurantListViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(restaurantSelected))
+            if (e.PropertyName == nameof(RestaurantSelected))
             {
-                var uri = $"{nameof(RestaurantDetailPage)}?id={restaurantSelected.BusinessName}";
+                var uri = $"{nameof(RestaurantDetailPage)}?id={RestaurantSelected.IdClient}";
                 await _navegacionService.GoToAsync(uri);
             }
         }
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            var nameCategory = query["nameCategory"].ToString();
+            NameCategory = query["nameCategory"].ToString();
+            Preferences.Set("nameCategory", NameCategory);
             await LoadDataAsync(nameCategory);
 
         }
 
         public async Task LoadDataAsync(string nameCategory)
         {
+            IsActivity = true;
+
             if (IsBusy)
                 return;
 
             try
             {
                 IsBusy = true;
-                var listRestaurant = await _genericQueriesServices.GetCategoriesClientes(nameCategory);
+                var listRestaurant = await _restaurantService.GetCategoriesClientes(nameCategory);
                 Restaurant = new ObservableCollection<RestaurantResponse>(listRestaurant);
             }
             catch (Exception e)
@@ -65,6 +77,8 @@ namespace GoingOutMobile.ViewModels
             {
                 IsBusy = false;
             }
+
+            IsActivity = false;
 
         }
 

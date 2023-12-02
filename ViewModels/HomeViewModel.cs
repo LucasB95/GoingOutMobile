@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Restaurant;
+using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
 using GoingOutMobile.Views;
 using System;
@@ -33,25 +34,16 @@ namespace GoingOutMobile.ViewModels
 
         private readonly IGenericQueriesServices _genericQueriesServices;
 
+        private readonly IRestaurantService _restaurantService;
+
         private readonly INavegacionService _navegacionService;
 
-        public HomeViewModel(IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService)
+        public HomeViewModel(IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService, IRestaurantService restaurantService)
         {
             _genericQueriesServices = genericQueriesServices;
             _navegacionService = navegacionService;
-            
-
+            _restaurantService = restaurantService;
         }
-
-        public async Task LoadInfo()
-        {
-            NombreUsuario = Preferences.Get("userName", string.Empty);
-            GetDataCommand = new Command(async () => await LoadDataAsync());
-            GetDataCommand.Execute(this);
-
-            await Task.Delay(100);
-        }
-
 
         public async Task LoadDataAsync()
         {
@@ -61,7 +53,7 @@ namespace GoingOutMobile.ViewModels
             try
             {
                 IsBusy = true;
-                var listCategories = await _genericQueriesServices.GetCategories();
+                var listCategories = await _restaurantService.GetCategories();
                 //var listClientes = await _genericQueriesServices.GetInmueblesFavoritos();
 
                 //FavoriteInmuebles = new ObservableCollection<InmuebleResponse>(listInmuebles);
@@ -77,10 +69,9 @@ namespace GoingOutMobile.ViewModels
             }
         }
 
-
         [RelayCommand]
         async Task Refresh()
-        {         
+        {
             NombreUsuario = Preferences.Get("userName", string.Empty);
             GetDataCommand = new Command(async () => await LoadDataAsync());
             GetDataCommand.Execute(this);

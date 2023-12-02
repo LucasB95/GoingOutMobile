@@ -7,18 +7,159 @@
              BackgroundColor="{StaticResource Primary}"
              >
 
+    <AbsoluteLayout VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
+        <!--<ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">-->
+        <VerticalStackLayout 
+                AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Margin="20,0,20,0"
+                Spacing="20"
+                >
 
-    <VerticalStackLayout 
-        VerticalOptions="Center"
-        Margin="20,0,20,0"
-        Spacing="20"
-        >
-        <Image
+            <Image
             Source="logo_secund.png"
             HorizontalOptions="Center"
             HeightRequest="130"
             WidthRequest="300"
             />
+
+            <Label 
+            Text="Iniciá sesión con tu e-mail"
+            TextColor="Black"
+            FontSize="Medium"
+            FontAttributes="Bold"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+            <Label
+            Text="Solo podrás usar este método si ya tenias registrada una cuenta."
+            TextColor="Black"
+            FontSize="Micro"
+            HorizontalOptions="Center"            
+            />
+
+            <Entry
+            Text="{Binding UserName}"
+            Placeholder="E-mail:"
+            PlaceholderColor="Black"
+            MaxLength="200"
+            MinimumWidthRequest="350" 
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            />
+
+            <HorizontalStackLayout>
+
+                <Entry
+            Text="{Binding Password}"
+            Placeholder="Contraseña:"
+            IsPassword="{Binding IsPassword}"
+            PlaceholderColor="Black"
+            MaxLength="150"
+            MinimumWidthRequest="350" 
+            WidthRequest="350"
+            HorizontalOptions="Start"
+            />
+
+                <ImageButton 
+                Source="{Binding IconSeePass}"  
+                HeightRequest="20" 
+                WidthRequest="20" 
+                Command="{Binding ChangeStatusPasswordCommand}"
+                HorizontalOptions="End"/>
+
+            </HorizontalStackLayout>
+
+            <VerticalStackLayout>
+
+
+                <Border StrokeThickness="3"
+                StrokeShape="RoundRectangle 40,0,0,40"
+                Background="{StaticResource Secondary}"                
+                WidthRequest="350"
+                HeightRequest="50">
+                    <Border.Stroke>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="#002a41"
+                          Offset="0.1" />
+                            <GradientStop Color="#037eb5"
+                          Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Label Text="Ingresar"
+                   TextColor="Teal"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoginMethodCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Border StrokeThickness="3"
+                StrokeShape="RoundRectangle 0,40,40,0"
+                Background="{StaticResource Secondary}"
+                WidthRequest="350"
+                HeightRequest="50">
+                    <Border.Stroke>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="#037eb5"
+                          Offset="0.1" />
+                            <GradientStop Color="#002a41"
+                          Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <Label Text="Regístrate"
+                   TextColor="Teal"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+
+            </VerticalStackLayout>
+
+
+        </VerticalStackLayout>
+        <!--</ScrollView>-->
+        <AbsoluteLayout
+                    AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    IsVisible="True">
+            <ActivityIndicator Color="Teal"
+                           AbsoluteLayout.LayoutBounds="0.5,0.5,0.1,0.1"
+                           AbsoluteLayout.LayoutFlags="All"
+                           IsVisible="True"
+                           IsRunning="{Binding IsActivity}"/>
+        </AbsoluteLayout>
+    </AbsoluteLayout>
+
+
+    <!--<VerticalStackLayout 
+        VerticalOptions="Center"
+        Margin="20,0,20,0"
+        Spacing="20"
+        >
+        
+        <ActivityIndicator IsRunning="{Binding IsActivity}" Color="Teal"  />
+        
+        <Image
+            Source="logo_secund.png"
+            HorizontalOptions="Center"
+            HeightRequest="130"
+            WidthRequest="300"
+            />        
 
         <Label 
             Text="Iniciá sesión con tu e-mail"
@@ -69,6 +210,7 @@
 
         <VerticalStackLayout>
 
+            
             <Border StrokeThickness="3"
                 StrokeShape="RoundRectangle 40,0,0,40"
                 Background="{StaticResource Secondary}"                
@@ -87,7 +229,7 @@
                    FontSize="Medium"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                   VerticalOptions="Center"/>                
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding LoginMethodCommand}"/>
                 </Border.GestureRecognizers>
@@ -117,9 +259,11 @@
                 </Border.GestureRecognizers>
             </Border>
             
+            
         </VerticalStackLayout>
 
-    </VerticalStackLayout>
+
+    </VerticalStackLayout>-->
 
 
 </ContentPage>
