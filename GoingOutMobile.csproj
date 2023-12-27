@@ -27,8 +27,8 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
-		<AssemblyVersion>2023.12.2.1</AssemblyVersion>
-		<FileVersion>2023.12.2.1</FileVersion>
+		<AssemblyVersion>2023.12.27.1</AssemblyVersion>
+		<FileVersion>2023.12.27.1</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -65,7 +65,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="5.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="mercadopago-sdk" Version="2.3.5" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
@@ -75,6 +78,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\BookingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateUserPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -97,6 +103,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RestaurantDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RestaurantFindListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\RestaurantListPage.xaml">

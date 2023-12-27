@@ -61,6 +61,12 @@ public static class MauiProgram
         builder.Services.AddTransient<RestaurantDetailViewModel>();
         builder.Services.AddTransient<RestaurantDetailPage>();
 
+        builder.Services.AddTransient<BookingsViewModel>();
+        builder.Services.AddTransient<BookingsPage>();
+
+        builder.Services.AddTransient<RestaurantFindListViewModel>();
+        builder.Services.AddTransient<RestaurantFindListPage>();
+
 
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
         Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
@@ -68,6 +74,8 @@ public static class MauiProgram
 
         Routing.RegisterRoute(nameof(RestaurantListPage), typeof(RestaurantListPage));
         Routing.RegisterRoute(nameof(RestaurantDetailPage), typeof(RestaurantDetailPage));
+        Routing.RegisterRoute(nameof(RestaurantFindListPage), typeof(RestaurantFindListPage));
+        Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
 
 #if DEBUG
         builder.Logging.AddDebug();

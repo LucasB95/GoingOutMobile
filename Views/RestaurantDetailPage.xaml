@@ -147,14 +147,14 @@
                                                         <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Description}" />
                                                     </VerticalStackLayout>
                                                 </HorizontalStackLayout>
-                                                
+
                                                 <HorizontalStackLayout>
 
-                                                    <HorizontalStackLayout >  
-                                                    <Label  VerticalOptions="Center" FontSize="Small" Text="Celiaco" />
-                                                    <CheckBox VerticalOptions="Center" IsChecked="{Binding Celiac}" />     
-                                                    </HorizontalStackLayout>                                                    
-                                                    
+                                                    <HorizontalStackLayout >
+                                                        <Label  VerticalOptions="Center" FontSize="Small" Text="Celiaco" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Celiac}" />
+                                                    </HorizontalStackLayout>
+
                                                     <HorizontalStackLayout>
                                                         <Label VerticalOptions="Center" FontSize="Small" Text="Vegano" />
                                                         <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegan}" />
@@ -166,14 +166,14 @@
                                                     </HorizontalStackLayout>
 
                                                 </HorizontalStackLayout>
-                                                
+
                                                 <HorizontalStackLayout >
                                                     <HorizontalStackLayout>
                                                         <Label  HorizontalOptions="Start" FontSize="Small" Text="$" FontAttributes="Bold"/>
                                                         <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Price}" />
                                                     </HorizontalStackLayout>
                                                 </HorizontalStackLayout>
-                                            </VerticalStackLayout>                                               
+                                            </VerticalStackLayout>
 
 
                                         </DataTemplate>
@@ -182,7 +182,6 @@
                                 </CollectionView>
 
                             </Border>
-
 
                             <Border  
                              Padding="16,8"
@@ -231,7 +230,7 @@
                                         <DataTemplate x:DataType="model:DrinksResponse">
 
                                             <VerticalStackLayout Margin="5" HeightRequest="70">
-                                                
+
                                                 <HorizontalStackLayout >
                                                     <VerticalStackLayout>
                                                         <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Name}" FontAttributes="Bold" TextDecorations="Underline"/>
@@ -244,9 +243,9 @@
 
                                                     </VerticalStackLayout>
                                                 </HorizontalStackLayout>
-                                                
+
                                             </VerticalStackLayout>
-                                            
+
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
 
@@ -254,39 +253,122 @@
 
                             </Border>
 
+                            <HorizontalStackLayout 
+                            VerticalOptions="EndAndExpand" 
+                            HorizontalOptions="Center"
+                            Padding="0,10,0,0"
+                            >
+
+                                <Frame
+                                HeightRequest="70"
+                                WidthRequest="200"
+                                CornerRadius="50"
+                                BackgroundColor="#1d94ab"
+                                >
+                                    <HorizontalStackLayout Spacing="5">
+                                        <Image 
+                                        HeightRequest="20"
+                                        WidthRequest="20"
+                                        VerticalOptions="Center"
+                                        Source="message_icon"
+                                        />
+                                        <Label 
+                                        Text="Reservar lugar"
+                                        FontSize="Medium"
+                                        TextColor="White"
+                                        VerticalOptions="CenterAndExpand"
+                                        />
+                                    </HorizontalStackLayout>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ReservarMesaCommand}"/>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout  
+                            VerticalOptions="EndAndExpand" 
+                            HorizontalOptions="End"
+                            Spacing="10"
+                            >
+
+                                <Frame
+                                HeightRequest="45"
+                                WidthRequest="45"
+                                CornerRadius="35"
+                                BackgroundColor="#1d94ab"
+                                VerticalOptions="EndAndExpand" 
+                                HorizontalOptions="End"
+                                >
+                                    <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="search_icon" />
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ProbarMPCommand}"/>
+                            </Frame.GestureRecognizers>
+                                </Frame>
+                                
+                                
+                                <Frame
+                                HeightRequest="45"
+                                WidthRequest="45"
+                                CornerRadius="35"
+                                BackgroundColor="#1d94ab"
+                                VerticalOptions="EndAndExpand" 
+                                HorizontalOptions="End"
+                                >
+                                    <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="message_icon" />
+                                    <!--<Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
+                            </Frame.GestureRecognizers>-->
+                                </Frame>
+
+                                <Frame
+                                HeightRequest="45"
+                                WidthRequest="45"
+                                CornerRadius="35"
+                                BackgroundColor="#1d94ab"
+                                >
+                                    <Image  HeightRequest="25" WidthRequest="25" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Source="phone_icon" />
+                                    <!--<Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
+                            </Frame.GestureRecognizers>-->
+
+                                </Frame>
+
+                            </HorizontalStackLayout>
+
+
                         </VerticalStackLayout>
 
                     </ScrollView>
 
-                    <HorizontalStackLayout  Grid.Row="5" 
+                    <!--<HorizontalStackLayout  Grid.Row="5" 
                     VerticalOptions="EndAndExpand" 
                     HorizontalOptions="Center"
-                    Spacing="10"
                     >
 
                         <Frame
                         HeightRequest="70"
-                        WidthRequest="150"
-                        CornerRadius="35"
+                        WidthRequest="200"
+                        CornerRadius="50"
                         BackgroundColor="#1d94ab"
                         >
-                            <HorizontalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="5">
                                 <Image 
-                                HeightRequest="25"
-                                WidthRequest="25"
+                                HeightRequest="20"
+                                WidthRequest="20"
                                 VerticalOptions="Center"
                                 Source="message_icon"
                                 />
                                 <Label 
-                                Text="Reservar"
+                                Text="Reservar lugar"
                                 FontSize="Medium"
                                 TextColor="White"
-                                VerticalOptions="Center"
+                                VerticalOptions="CenterAndExpand"
                                 />
                             </HorizontalStackLayout>
-                            <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
-                            </Frame.GestureRecognizers>-->
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ReservarMesaCommand}"/>
+                            </Frame.GestureRecognizers>
                         </Frame>
 
                     </HorizontalStackLayout>
@@ -306,9 +388,11 @@
                         HorizontalOptions="End"
                         >
                             <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="message_icon" />
-                            <!--<Frame.GestureRecognizers>
+                            -->
+                    <!--<Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
                             </Frame.GestureRecognizers>-->
+                    <!--
                         </Frame>
 
                         <Frame
@@ -318,13 +402,15 @@
                         BackgroundColor="#1d94ab"
                         >
                             <Image  HeightRequest="25" WidthRequest="25" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Source="phone_icon" />
-                            <!--<Frame.GestureRecognizers>
+                            -->
+                    <!--<Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
                             </Frame.GestureRecognizers>-->
+                    <!--
 
                         </Frame>
 
-                    </HorizontalStackLayout>
+                    </HorizontalStackLayout>-->
 
                 </Grid>
 

@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Restaurant;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
@@ -43,7 +44,7 @@ namespace GoingOutMobile.ViewModels
         {
             if (e.PropertyName == nameof(RestaurantSelected))
             {
-                var uri = $"{nameof(RestaurantDetailPage)}?id={RestaurantSelected.IdClient}";
+                var uri = $"{nameof(RestaurantDetailPage)}?id={RestaurantSelected.IdClient}&page={nameof(RestaurantListPage)}";
                 await _navegacionService.GoToAsync(uri);
             }
         }
@@ -80,6 +81,14 @@ namespace GoingOutMobile.ViewModels
 
             IsActivity = false;
 
+        }
+
+
+        [RelayCommand]
+        async Task GetBackEvent()
+        {
+            var uri = $"//{nameof(HomePage)}";
+            await _navegacionService.GoToAsync(uri);
         }
 
     }

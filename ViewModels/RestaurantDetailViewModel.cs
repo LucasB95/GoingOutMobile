@@ -1,5 +1,4 @@
-﻿using Android.Webkit;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Restaurant;
 using GoingOutMobile.Services;
@@ -52,17 +51,22 @@ namespace GoingOutMobile.ViewModels
         private string idClient;
 
         [ObservableProperty]
+        private string pageReturn;
+
+        [ObservableProperty]
         private bool isActivity = false;
 
         public Command GetDataCommand { get; set; }
 
         private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
+        private readonly IMercadoPago _mercadoPago;
 
-        public RestaurantDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService)
+        public RestaurantDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPago mercadoPago)
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
+            _mercadoPago = mercadoPago;
         }
 
         public async Task LoadDataAsync()
@@ -91,18 +95,31 @@ namespace GoingOutMobile.ViewModels
 
                 var DishesCategoriesId = Dishes.Where(x => CategoriesId.Contains(x.Categories.Id)).Select(x => x.Categories.Id).ToList();
 
+                MenuCategoriesDishes postres = null;
 
                 foreach (var item in this.Categories)
                 {
                     if (DishesCategoriesId.Any(x => x == item.Id))
                     {
-                        DishesList.Add(new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList()));
+                        if (item.Name.Contains("Postres"))
+                        {
+                            postres = new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList());
+                        }
+                        else
+                        {
+                            DishesList.Add(new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList()));
+                        }
                     }
                     if (DrinksCategoriesId.Any(x => x == item.Id))
                     {
                         DrinksList.Add(new MenuCategoriesDrinks(item.Id, item.Name, Drinks.Where(x => x.Categories.Id == item.Id).ToList()));
                     }
                 }
+
+                if (postres != null) { DishesList.Add(postres); }
+
+                DishesList.OrderBy(x => x.IdCategory).ToList();
+                DrinksList.OrderBy(x => x.IdCategory).ToList();
 
                 var favorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
 
@@ -129,6 +146,7 @@ namespace GoingOutMobile.ViewModels
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             IdClient = query["id"].ToString();
+            PageReturn = query["page"].ToString();
 
             IsRefreshing = true;
             await RefreshCommand.ExecuteAsync(this);
@@ -146,9 +164,26 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task GetBackEvent()
         {
-            var category = Preferences.Get("nameCategory", string.Empty);
-            var uri = $"{nameof(RestaurantListPage)}?nameCategory={category}";
+            var uri = $"//{nameof(HomePage)}";
+            if (PageReturn.Contains("RestaurantListPage"))
+            {
+                var category = Preferences.Get("nameCategory", string.Empty);
+                uri = $"{nameof(RestaurantListPage)}?nameCategory={category}";
+            }
+            else if (PageReturn.Contains("RestaurantFindListPage"))
+            {
+                uri = $"/{nameof(RestaurantFindListPage)}";
+            }
+
             await _navegacionService.GoToAsync(uri);
+        }
+
+        [RelayCommand]
+        async Task ProbarMP()
+        {
+             _mercadoPago.GenerateCardToken(); 
+
+           
         }
 
         [RelayCommand]
@@ -229,6 +264,13 @@ namespace GoingOutMobile.ViewModels
 
             drinks = DrinkSelected;
 
+        }
+
+        [RelayCommand]
+        async Task ReservarMesa()
+        {
+            var uri = $"{nameof(BookingsPage)}?id={IdClient}";
+            await _navegacionService.GoToAsync(uri);
         }
 
 
@@ -327,8 +369,8 @@ namespace GoingOutMobile.ViewModels
         //}
 
 
-    }  
+    }
 
-    
+
 
 }

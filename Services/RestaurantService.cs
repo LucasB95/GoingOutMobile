@@ -219,5 +219,31 @@ namespace GoingOutMobile.Services
 
             return JsonConvert.DeserializeObject<MenuResponse>(jsonResult);
         }
+
+
+        public async Task<IEnumerable<RestaurantResponse>> GetRestaurantSearch(string search)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Authorization = new
+            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+
+            if (string.IsNullOrEmpty(search))
+            {
+                throw new ArgumentNullException(nameof(search));
+            }
+            var url = $"{settings.UrlBase}/Clients/GetRestaurantSearch/{search}";
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
+        }
+
     }
 }

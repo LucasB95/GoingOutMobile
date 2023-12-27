@@ -11,5 +11,6 @@ namespace GoingOutMobile.Services
         Task<List<CategoriesMobileResponse>> GetCategories();
         Task<IEnumerable<RestaurantResponse>> GetCategoriesClientes(string nameCategory);
         Task<MenuResponse> GetClientMenu(string idRestaurant);
+        Task<IEnumerable<RestaurantResponse>> GetRestaurantSearch(string search);
     }
 }

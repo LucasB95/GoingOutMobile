@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoingOutMobile.Views.BookingsPage"
+             Shell.NavBarIsVisible="false"
+             Title="Reserva"
+             BackgroundColor="{StaticResource Primary}">
+
+    <VerticalStackLayout Margin="20" Spacing="20" >
+
+        <Label 
+            Text="Cantidad de Personas"
+            FontAttributes="Bold"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Picker
+            Title="Seleccione la cantidad" 
+            TitleColor="Black"
+            BackgroundColor="{StaticResource Secondary}"
+            SelectedItem="{Binding CantidadSelected}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"
+            WidthRequest="300"
+            HeightRequest="50">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>1</x:String>
+                    <x:String>2</x:String>
+                    <x:String>3</x:String>
+                    <x:String>4</x:String>
+                    <x:String>5</x:String>
+                    <x:String>6</x:String>
+                    <x:String>7</x:String>
+                    <x:String>8</x:String>
+                    <x:String>9</x:String>
+                    <x:String>10</x:String>
+                    <x:String>+10</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        <Editor  
+            Text="{Binding Observation}"
+            Placeholder="Observaciones"
+            HeightRequest="150" 
+            BackgroundColor="{StaticResource Secondary}"
+            PlaceholderColor="Black"/>
+
+        <Border StrokeThickness="3"
+                StrokeShape="RoundRectangle 40,0,0,40"
+                Background="{StaticResource Secondary}"                
+                WidthRequest="350"
+                HeightRequest="50">
+            <Border.Stroke>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="#002a41"
+                          Offset="0.1" />
+                    <GradientStop Color="#037eb5"
+                          Offset="1.0" />
+                </LinearGradientBrush>
+            </Border.Stroke>
+            <Label Text="Aceptar"
+                   TextColor="Teal"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding ReservarCommand}"/>
+            </Border.GestureRecognizers>
+        </Border>
+
+    </VerticalStackLayout>
+
+
+
+
+</ContentPage>

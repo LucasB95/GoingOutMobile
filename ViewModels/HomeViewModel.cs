@@ -90,8 +90,8 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task TapBusquedaRestaurant()
         {
-            //var uri = $"{nameof(InmuebleBusquedaPage)}";
-            //await _navegacionService.GoToAsync(uri);
+            var uri = $"{nameof(RestaurantFindListPage)}";
+            await _navegacionService.GoToAsync(uri);
         }
     }
 }
