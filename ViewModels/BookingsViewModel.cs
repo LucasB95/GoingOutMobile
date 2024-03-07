@@ -25,11 +25,13 @@ namespace GoingOutMobile.ViewModels
 
         private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
+        private readonly IMercadoPagoService _mercadoPagoService;
 
-        public BookingsViewModel(IRestaurantService restaurantService, INavegacionService navegacionService)
+        public BookingsViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPagoService mercadoPagoService)
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
+            _mercadoPagoService = mercadoPagoService;
         }
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -47,7 +49,12 @@ namespace GoingOutMobile.ViewModels
             }
             else if(!String.IsNullOrEmpty(CantidadSelected))
             {
-                await Shell.Current.DisplayAlert("Mensaje", "sacar la cantidad desde el picker", "Aceptar");
+
+                var resultado = await _mercadoPagoService.preparandoMP();
+                var uri = new Uri(resultado[1]);
+                await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+
+                //await Shell.Current.DisplayAlert("Mensaje", "sacar la cantidad desde el picker", "Aceptar");
             }
 
         }

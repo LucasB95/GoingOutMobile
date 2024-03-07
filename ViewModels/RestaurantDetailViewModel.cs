@@ -60,13 +60,13 @@ namespace GoingOutMobile.ViewModels
 
         private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
-        private readonly IMercadoPago _mercadoPago;
+        private readonly IMercadoPagoService _mercadoPagoService;
 
-        public RestaurantDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPago mercadoPago)
+        public RestaurantDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPagoService mercadoPagoService)
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
-            _mercadoPago = mercadoPago;
+            _mercadoPagoService = mercadoPagoService;
         }
 
         public async Task LoadDataAsync()
@@ -181,9 +181,15 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task ProbarMP()
         {
-             _mercadoPago.GenerateCardToken(); 
+            //var resultado1 = await _mercadoPagoService.MPCorto();
+            var resultado = await _mercadoPagoService.preparandoMP();
 
-           
+            var uri = new Uri(resultado[1]);
+            await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+
+
+            //var uri = $"{nameof(MercadoPagoPage)}";
+            //await _navegacionService.GoToAsync(uri);
         }
 
         [RelayCommand]

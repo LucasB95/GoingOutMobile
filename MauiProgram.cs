@@ -37,6 +37,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<INavegacionService, NavegacionService>();
 		builder.Services.AddSingleton<IGenericQueriesServices, GenericQueriesServices>();
         builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
+        builder.Services.AddSingleton<IMercadoPagoService, MercadoPagoService>();
 
         builder.Services.AddSingleton<SecurityService>();
 
@@ -67,7 +68,7 @@ public static class MauiProgram
         builder.Services.AddTransient<RestaurantFindListViewModel>();
         builder.Services.AddTransient<RestaurantFindListPage>();
 
-
+        Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
         Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
         Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
