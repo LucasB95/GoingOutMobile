@@ -49,7 +49,9 @@ namespace GoingOutMobile.Services
                       {
                         {"success","customer" }
                       }
-                    }
+                    },
+                    {"auto_return", "all"}
+
 
 
                 };

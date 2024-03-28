@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
+using GoingOutMobile.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,6 +23,9 @@ namespace GoingOutMobile.ViewModels
         [ObservableProperty]
         private string idClient;
 
+        [ObservableProperty]
+        private string pageReturn;
+
 
         private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
@@ -36,6 +40,7 @@ namespace GoingOutMobile.ViewModels
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             IdClient = query["id"].ToString();
+            PageReturn = query["page"].ToString();
         }
 
 
@@ -57,6 +62,19 @@ namespace GoingOutMobile.ViewModels
                 //await Shell.Current.DisplayAlert("Mensaje", "sacar la cantidad desde el picker", "Aceptar");
             }
 
+        }
+
+        [RelayCommand]
+        async Task GetBackEvent()
+        {
+            var uri = $"//{nameof(HomePage)}";
+            if (PageReturn.Contains("RestaurantDetailPage"))
+            {
+                var category = Preferences.Get("nameCategory", string.Empty);
+                uri = $"{nameof(RestaurantDetailPage)}?id={IdClient}&page={nameof(RestaurantListPage)}";
+            }
+
+            await _navegacionService.GoToAsync(uri);
         }
 
     }

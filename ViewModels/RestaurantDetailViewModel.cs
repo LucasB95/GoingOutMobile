@@ -275,7 +275,7 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task ReservarMesa()
         {
-            var uri = $"{nameof(BookingsPage)}?id={IdClient}";
+            var uri = $"{nameof(BookingsPage)}?id={IdClient}&page={nameof(RestaurantDetailPage)}";
             await _navegacionService.GoToAsync(uri);
         }
 
