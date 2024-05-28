@@ -1,4 +1,5 @@
-﻿using MercadoPago.Client.Payment;
+﻿using GoingOutMobile.Services.Interfaces;
+using MercadoPago.Client.Payment;
 using MercadoPago.Config;
 using MercadoPago.Resource.Payment;
 using Microsoft.Win32.SafeHandles;

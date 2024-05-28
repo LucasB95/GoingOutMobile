@@ -1,4 +1,4 @@
-﻿namespace GoingOutMobile.Services
+﻿namespace GoingOutMobile.Services.Interfaces
 {
     public interface IMercadoPagoService
     {

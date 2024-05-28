@@ -52,12 +52,12 @@
             Icon="lastvisited"
         />
 
-    <ShellContent
+    <!--<ShellContent
             Title="MisGastos"
             ContentTemplate="{DataTemplate views:MyExpensesPage}"
             Route="MyExpensesPage"   
             Icon="expenses"
-        />
+        />-->
 
     <ShellContent 
            Title="Configuracion"

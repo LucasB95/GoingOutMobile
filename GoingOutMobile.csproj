@@ -99,10 +99,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\BookingsPage.xaml">
+	  <MauiXaml Update="Views\Reserve\BookingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\CreateUserPage.xaml">
+	  <MauiXaml Update="Views\Security\CreateUserPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\FavoritesPage.xaml">
@@ -114,10 +114,10 @@
 	  <MauiXaml Update="Views\LastVisitedPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\LoginGooglePage.xaml">
+	  <MauiXaml Update="Views\Security\LoginGooglePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\LoginPage.xaml">
+	  <MauiXaml Update="Views\Security\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\MainPage.xaml">
@@ -126,25 +126,22 @@
 	  <MauiXaml Update="Views\MercadoPagoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\MyExpensesPage.xaml">
+	  <MauiXaml Update="Views\Reserve\ReserveDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\ReserveDetailPage.xaml">
+	  <MauiXaml Update="Views\Reserve\ReserveListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\ReserveListPage.xaml">
+	  <MauiXaml Update="Views\Restaurant\RestaurantDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\RestaurantDetailPage.xaml">
+	  <MauiXaml Update="Views\Restaurant\RestaurantFindListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\RestaurantFindListPage.xaml">
+	  <MauiXaml Update="Views\Restaurant\RestaurantListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\RestaurantListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Views\SettingsPage.xaml">
+	  <MauiXaml Update="Views\Security\SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

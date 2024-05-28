@@ -163,7 +163,7 @@
                             <Picker
                              Title="Seleccione la cantidad:" 
                              TitleColor="Black"
-                             BackgroundColor="Black"
+                             BackgroundColor="White"
                              SelectedItem="{Binding Reserve.AmountPeople}"
                              VerticalOptions="Center" 
                              HorizontalOptions="Center"
