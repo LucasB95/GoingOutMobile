@@ -61,6 +61,52 @@ namespace GoingOutMobile.Services
 
         }
 
+        //public async Task<bool> LoginGoogleService()
+        //{
+        //    client.DefaultRequestHeaders.Clear();
+        //    //client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
+        //    client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+
+        //    var url = $"{settings.UrlBase}/Authenticate/ExternalGoogle?provider=Google";
+
+        //    //var loginRequest = "Google";
+
+        //    //var json = JsonConvert.SerializeObject(loginRequest);
+        //    //var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        //    //var response = await client.PostAsync(url, content);
+        //    var response = await client.GetAsync(url);
+
+        //    if (!response.IsSuccessStatusCode)
+        //    {
+        //        var errorMessage = await response.Content.ReadAsStringAsync();
+        //        throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+        //        //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+        //    }
+
+        //    var resultado = await _mercadoPagoService.preparandoMP();
+
+        //    var uri = new Uri(resultado[1]);
+        //    await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+
+        //    var jsonResult = await response.Content.ReadAsStringAsync();
+
+        //    var resultado = JsonConvert.DeserializeObject<UserResponse>(jsonResult);
+
+        //    if (resultado != null && resultado.message.Contains("MSG_LOGIN_OK"))
+        //    {
+        //        //Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
+        //        //Preferences.Set("IdUser", resultado.id);
+        //        //Preferences.Set("userName", loginRequest.userName);
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //    return true;
+        //}
+
         public async Task<bool> Logout(string IdUser)
         {
             client.DefaultRequestHeaders.Clear();
@@ -132,5 +178,11 @@ namespace GoingOutMobile.Services
         }
 
 
+    }
+
+
+    internal class LoginGoogle
+    {
+        public string provider { get; set; }
     }
 }

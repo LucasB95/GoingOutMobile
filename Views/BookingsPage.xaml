@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GoingOutMobile.Views.BookingsPage"
-             Shell.NavBarIsVisible="False"
-             Title="Reserva"
+             Shell.NavBarIsVisible="False"            
              BackgroundColor="{StaticResource Primary}">
 
 
@@ -16,28 +15,26 @@
               HorizontalOptions="FillAndExpand"
               >
 
-            <StackLayout 
-              Margin="0,0,0,0" 
-              Orientation="Horizontal"
-              BackgroundColor="{StaticResource Primary}"
-              HeightRequest="60"
-              >
-                <ImageButton 
-                       Source="left_arrow_icon" 
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       Command="{Binding GetBackEventCommand}"
-                      />
+            <ImageButton 
+            Source="left_arrow_icon" 
+            HorizontalOptions="StartAndExpand"
+            VerticalOptions="StartAndExpand"
+            Command="{Binding GetBackEventCommand}"
+           />
+
+            <VerticalStackLayout
+                Padding="15">
 
                 <Label
-                  Text="Reserva"
-                  HorizontalOptions="CenterAndExpand"
-                  VerticalOptions="CenterAndExpand"
-                  FontSize="Large"
-                  TextColor="White"
-                  />
-            </StackLayout>
+               Text="Completar Reserva:"
+               HorizontalOptions="CenterAndExpand"
+               VerticalOptions="CenterAndExpand"
+               FontSize="Large"
+               TextColor="White"
+               />
 
+            </VerticalStackLayout>           
+            
             <Label 
              Text="Cantidad de Personas"
              FontAttributes="Bold"
@@ -45,13 +42,13 @@
              HorizontalOptions="Center" />
 
             <Picker
-             Title="Seleccione la cantidad" 
+             Title="Seleccione la cantidad:" 
              TitleColor="Black"
              BackgroundColor="{StaticResource Secondary}"
              SelectedItem="{Binding CantidadSelected}"
              VerticalOptions="Center" 
              HorizontalOptions="Center"
-             WidthRequest="300"
+             WidthRequest="170"
              HeightRequest="50">    
                 <Picker.ItemsSource>
                     <x:Array Type="{x:Type x:String}">
@@ -70,12 +67,54 @@
                 </Picker.ItemsSource>
             </Picker>
 
+            <VerticalStackLayout
+                Padding="10">
+
+                <Label 
+                 Text="Dia para la reserva: "
+                 FontAttributes="Bold"
+                 VerticalOptions="Center" 
+                 HorizontalOptions="Center" />
+
+                <DatePicker MinimumDate="{Binding MinDate}"
+                        Date="{Binding SelectedDate}" 
+                        FontSize="18"
+                        VerticalOptions="Center" 
+                        HorizontalOptions="Center"
+                        WidthRequest="150"
+                        HeightRequest="50"/>
+                
+            </VerticalStackLayout>
+
+            <VerticalStackLayout
+                Padding="10"
+                >
+                
+                <Label 
+                 Text="Hora para la reserva: "
+                 FontAttributes="Bold"
+                 VerticalOptions="Center" 
+                 HorizontalOptions="Center" />
+
+                <TimePicker 
+                Time="{Binding SelectedTime}" 
+                VerticalOptions="Center" 
+                HorizontalOptions="Center"
+                Format="HH:mm"
+                FontSize="18"
+                WidthRequest="150"
+                HeightRequest="50"/>
+
+            </VerticalStackLayout>
+            
+
             <Editor  
              Text="{Binding Observation}"
-             Placeholder="Observaciones"
+             Placeholder="Observaciones: "
              HeightRequest="150" 
              BackgroundColor="{StaticResource Secondary}"
-             PlaceholderColor="Black"/>
+             PlaceholderColor="Black"
+                />
 
             <Border StrokeThickness="3"
              StrokeShape="RoundRectangle 40,0,0,40"

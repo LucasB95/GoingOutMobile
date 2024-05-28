@@ -25,10 +25,13 @@ namespace GoingOutMobile.ViewModels
         ObservableCollection<CategoriesMobileResponse> categoriesMobiles;
 
         [ObservableProperty]
+        ObservableCollection<RestaurantResponse> favorites;
+
+        [ObservableProperty]
         bool isRefreshing;
 
-        //[ObservableProperty]
-        //ObservableCollection<InmuebleResponse> favoriteInmuebles;
+        [ObservableProperty]
+        RestaurantResponse restaurantSelected;
 
         public Command GetDataCommand { get; set; }
 
@@ -43,6 +46,17 @@ namespace GoingOutMobile.ViewModels
             _genericQueriesServices = genericQueriesServices;
             _navegacionService = navegacionService;
             _restaurantService = restaurantService;
+
+            PropertyChanged += RestaurantDetailViewModel_PropertyChanged;
+        }
+
+        private async void RestaurantDetailViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(RestaurantSelected))
+            {
+                var uri = $"{nameof(RestaurantDetailPage)}?id={RestaurantSelected.IdClient}&page={nameof(HomePage)}";
+                await _navegacionService.GoToAsync(uri);
+            }
         }
 
         public async Task LoadDataAsync()
@@ -58,6 +72,9 @@ namespace GoingOutMobile.ViewModels
 
                 //FavoriteInmuebles = new ObservableCollection<InmuebleResponse>(listInmuebles);
                 CategoriesMobiles = new ObservableCollection<CategoriesMobileResponse>(listCategories);
+                var listFavorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
+                Favorites = new ObservableCollection<RestaurantResponse>(listFavorites);
+
             }
             catch (Exception e)
             {
@@ -82,7 +99,7 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task CategoryEventSelected()
         {
-            var uri = $"{nameof(RestaurantListPage)}?nameCategory={categoriesMobileSelected.Name}";
+            var uri = $"{nameof(RestaurantListPage)}?nameCategory={CategoriesMobileSelected.Name}";
             await _navegacionService.GoToAsync(uri);
         }
 

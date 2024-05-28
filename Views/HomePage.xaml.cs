@@ -31,7 +31,13 @@ public partial class HomePage : ContentPage
             {
                 await _homeViewModel.RefreshCommand.ExecuteAsync(this);
 
-                (Shell.Current as AppShell).IsLogged = true;
+                bool isloggedControl = (Shell.Current as AppShell).IsLogged;
+
+                if (!isloggedControl)
+                {
+                    (Shell.Current as AppShell).IsLogged = true;
+                }
+
             }
 
         }

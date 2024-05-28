@@ -8,6 +8,9 @@ public partial class App : Application
     {
         InitializeComponent();
 
+        // Forzar el modo claro
+        Application.Current.UserAppTheme = AppTheme.Light;
+
         MainPage = new AppShell();
 
     }

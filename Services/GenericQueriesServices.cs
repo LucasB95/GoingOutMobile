@@ -30,8 +30,7 @@ namespace GoingOutMobile.Services
         {
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             UserInformation userInformation = new UserInformation();
 

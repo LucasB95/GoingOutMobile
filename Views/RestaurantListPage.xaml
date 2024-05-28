@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
              x:DataType="vm:RestaurantListViewModel"
              Shell.NavBarIsVisible="False" 
+             BackgroundColor="{StaticResource Primary}"
             >
     <!--Title="Restaurantes por categoria"-->
 
@@ -22,7 +23,7 @@
             <StackLayout 
                 Margin="0,0,0,0" 
                 Orientation="Horizontal"
-                BackgroundColor="{StaticResource Primary}"
+                BackgroundColor="{StaticResource Secondary}"
                 HeightRequest="60"
                 >
                 <ImageButton 
@@ -54,63 +55,103 @@
                 <CollectionView.ItemTemplate>
 
                     <DataTemplate x:DataType="model:RestaurantResponse">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="6*" />
-                            </Grid.ColumnDefinitions>
-                            <Frame 
-                        Grid.Column="0"
-                        CornerRadius="10"   
-                        Padding="0"
-                        IsClippedToBounds="True"
-                           >
+
+                        <Border 
+                            BackgroundColor="WhiteSmoke"
+                            StrokeThickness="3"
+                            >   
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10,10,10,10"  />
+                            </Border.StrokeShape>
+
+                            <Border.Stroke>
+                                <LinearGradientBrush EndPoint="0,1">
+                                    <GradientStop Color="Teal"
+                                    Offset="0.1" />
+                                    <GradientStop Color="Teal"
+                                    Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Columna para la imagen -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Columna para la línea divisoria -->
+                                    <ColumnDefinition Width="*" />
+                                    <!-- Columna para la información -->
+                                </Grid.ColumnDefinitions>
+
                                 <Image 
-                            HeightRequest="150"
-                            WidthRequest="150"
-                            Aspect="Fill"
-                            Source="foto_resto.png"
-                            />
-                            </Frame>
-                            <StackLayout 
-                        Grid.Column="1" 
-                        Padding="15"
-                        Spacing="10"
+                                     Grid.Column="0" 
+                                HeightRequest="150"
+                                WidthRequest="150"
+                                Aspect="Fill"
+                                Source="foto_resto.png"
+                                />
+
+                                <!-- Línea divisoria -->
+                                <BoxView 
+                                Grid.Column="1"
+                                WidthRequest="3"
+                                BackgroundColor="Teal"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="End"
+                                Margin="10,0,0,0"
+                                Color="Teal"
+                                />  
+
+                                <StackLayout 
+                                Grid.Column="2" 
+                                Padding="15"
+                                Spacing="5"
                                  >
-                                <Label 
-                            FontSize="Small"
-                            Text="{Binding BusinessName}"
-                            />
-                                <HorizontalStackLayout>
-                                    <Label 
-                            FontSize="Small"
-                            Padding="0,0,5,0"
-                            Text="{Binding Adress.Province}"
-                            />
-                                    <Label 
-                            FontSize="Small"
-                            Text="{Binding Adress.Location}"
-                            />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Padding="0,0,0,0">
-                                    <Label 
-                            FontSize="Small"
-                            Text="{Binding Adress.Street}"
-                            Padding="0,0,5,0"
-                            />
-                                    <Label 
-                            FontSize="Small"
-                            Text="{Binding Adress.Numeration}"
-                            />
 
-                                </HorizontalStackLayout>
-                                <Label 
-                            FontSize="Small"
-                            Text="{Binding Adress.PC}"
-                            />
-                            </StackLayout>
-                        </Grid>
+                                    <Label 
+                                    FontSize="Small"
+                                    Text="{Binding BusinessName}"
+                                    />
+                                    <HorizontalStackLayout>
+                                        <Label 
+                                        FontSize="Small"
+                                        Padding="0,0,5,0"
+                                        Text="{Binding Adress.Province, StringFormat='{0},'}"
+                                        />
+                                        <Label 
+                                        FontSize="Small"
+                                        Text="{Binding Adress.Location}"
+                                        LineBreakMode="TailTruncation"
+                                        />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Padding="0,0,0,0">
+                                        <Label 
+                                    FontSize="Small"
+                                    Text="{Binding Adress.Street}"
+                                    Padding="0,0,5,0"
+                                    />
+                                        <Label 
+                                    FontSize="Small"
+                                    Text="{Binding Adress.Numeration}"
+                                    />
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Padding="0,0,0,0">
+                                        <Label 
+                                    FontSize="Small"
+                                    Text="Codigó Postal: "
+                                    Padding="0,0,5,0"
+                                    />
+                                        <Label 
+                                    FontSize="Small"
+                                    Text="{Binding Adress.PC}"
+                                    />
+                                    </HorizontalStackLayout>
 
+                                </StackLayout>
+                                
+                            </Grid>
+
+                        </Border>
                     </DataTemplate>
 
                 </CollectionView.ItemTemplate>
@@ -128,9 +169,9 @@
                            IsVisible="True"
                            IsRunning="{Binding IsActivity}"/>
         </AbsoluteLayout>
-        
+
     </AbsoluteLayout>
-    
+
 
 
 

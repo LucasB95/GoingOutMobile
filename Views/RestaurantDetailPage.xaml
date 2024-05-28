@@ -6,6 +6,7 @@
              xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
              x:DataType="vm:RestaurantDetailViewModel"
              Shell.NavBarIsVisible="false"
+             BackgroundColor="{StaticResource Primary}"
              Title="Restaurant">
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}"
@@ -31,9 +32,11 @@
                     Grid.Row="0"
                     VerticalOptions="Start"
                     Aspect="Fill"
-                    HeightRequest="280"
+                    HeightRequest="250"
+                    WidthRequest="250"
                     Grid.RowSpan="3"
                     Source="foto_resto.png"
+                    BackgroundColor="WhiteSmoke"
                     />
 
                     <StackLayout Grid.Row="1" Margin="20,0,20,0" Orientation="Horizontal">
@@ -64,18 +67,25 @@
 
                     <VerticalStackLayout Grid.Row="3" Margin="5">
 
-                        <HorizontalStackLayout Padding="0,0,0,10">
-                            <Image HeightRequest="20" Source="location_icon" />
-                            <Label FontSize="Small" Padding="0,0,5,0" Text="{Binding Restaurant.BusinessName}"/>
+                        <HorizontalStackLayout Padding="40,0,0,10">
+                            <!--<Image HeightRequest="20" Source="location_icon" />-->
+                            <Label FontSize="Medium" TextColor="Black"  Padding="0,0,0,0" Text="{Binding Restaurant.BusinessName}"/>
                         </HorizontalStackLayout>
 
                         <HorizontalStackLayout>
-                            <Image HeightRequest="20" Source="location_icon"/>
-                            <Label FontSize="Small" Padding="0,0,5,0" Text="{Binding Restaurant.Adress.Province}"/>
-                            <Label FontSize="Small" Text="{Binding Restaurant.Adress.Location}" Padding="0,0,5,0" />
-                            <Label FontSize="Small" Text="{Binding Restaurant.Adress.Street}" Padding="0,0,5,0" />
-                            <Label FontSize="Small" Text="{Binding Restaurant.Adress.Numeration}"/>
+                            <ImageButton HeightRequest="20" Source="location_icon" Command="{Binding MapsEventCommand}" />
+                            <Label FontSize="Subtitle" TextColor="Black" Padding="0,0,5,0" Text="{Binding Restaurant.Adress.Province, StringFormat='{0},'}"/>
+                            <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Location, StringFormat='{0}:'}" Padding="0,0,5,0" />
+                            
                         </HorizontalStackLayout>
+                        <HorizontalStackLayout
+                            VerticalOptions="StartAndExpand"
+                            Padding="43,0,0,0"
+                            >
+                            <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Street}" Padding="0,0,5,0" />
+                            <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Numeration}"/>
+                            
+                        </HorizontalStackLayout>    
                     </VerticalStackLayout>
 
 
@@ -90,25 +100,22 @@
                         <VerticalStackLayout >
                             <HorizontalStackLayout Spacing="7" Margin="10" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
                                 <Image Source="menu" HeightRequest="30" WidthRequest="30"  />
-                                <Label VerticalOptions="Center" FontSize="Medium" Text="Menu" />
+                                <Label VerticalOptions="Center" FontSize="Medium" Text="Menu" TextColor="Black"/>
                             </HorizontalStackLayout>
 
                             <Border  
-                                    Padding="16,8"
+                                    Padding="4,4"
                                     HorizontalOptions="Center"
-                                    BackgroundColor="{StaticResource Secondary}"
+                                    BackgroundColor="Teal"
                                     >
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10,10,10,10"  />
                                 </Border.StrokeShape>
 
                                 <CollectionView
-                                SelectionMode="Multiple"
                                 HeightRequest="400"
                                 ItemsSource="{Binding DishesList}"
-                                SelectedItem="{Binding DishSelected}"
-                                SelectionChangedCommand="{Binding DishEventSelectedCommand}"
-                                BackgroundColor="{StaticResource Secondary}"
+                                BackgroundColor="WhiteSmoke"
                                 IsGrouped="True"
                                 >
                                     <CollectionView.GroupHeaderTemplate>
@@ -118,12 +125,22 @@
                                             <Border  
                                                 Padding="70,3"
                                                 HorizontalOptions="Center"
-                                                BackgroundColor="Beige"
+                                                BackgroundColor="NavajoWhite"
+                                                StrokeThickness="3"
                                                 >
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="25,25,25,25"  />
                                                 </Border.StrokeShape>
-
+                                                
+                                                <Border.Stroke>
+                                                    <LinearGradientBrush EndPoint="0,1">
+                                                        <GradientStop Color="Teal"
+                                                            Offset="0.1" />
+                                                        <GradientStop Color="Teal"
+                                                         Offset="1.0" />
+                                                    </LinearGradientBrush>
+                                                </Border.Stroke>
+                                                
                                                 <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
 
                                             </Border>
@@ -152,17 +169,17 @@
 
                                                     <HorizontalStackLayout >
                                                         <Label  VerticalOptions="Center" FontSize="Small" Text="Celiaco" />
-                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Celiac}" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Celiac}" IsEnabled="False"/>
                                                     </HorizontalStackLayout>
 
                                                     <HorizontalStackLayout>
                                                         <Label VerticalOptions="Center" FontSize="Small" Text="Vegano" />
-                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegan}" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegan}" IsEnabled="False"/>
                                                     </HorizontalStackLayout>
 
                                                     <HorizontalStackLayout>
                                                         <Label VerticalOptions="Center" FontSize="Small" Text="Vegetariano" />
-                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegetarian}"/>
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegetarian}" IsEnabled="False"/>
                                                     </HorizontalStackLayout>
 
                                                 </HorizontalStackLayout>
@@ -184,21 +201,18 @@
                             </Border>
 
                             <Border  
-                             Padding="16,8"
-                             HorizontalOptions="Center"
-                             BackgroundColor="{StaticResource Secondary}"
+                                    Padding="4,4"
+                                    HorizontalOptions="Center"
+                                    BackgroundColor="Teal"
                              >
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="10,10,10,10"  />
                                 </Border.StrokeShape>
 
                                 <CollectionView
-                                SelectionMode="Multiple"
                                 HeightRequest="400"
                                 ItemsSource="{Binding DrinksList}"
-                                SelectedItem="{Binding DrinkSelected}"
-                                SelectionChangedCommand="{Binding DrinksEventSelectedCommand}"
-                                BackgroundColor="{StaticResource Secondary}"
+                                BackgroundColor="WhiteSmoke"
                                 IsGrouped="True"
                                 >
                                     <CollectionView.GroupHeaderTemplate>
@@ -208,11 +222,21 @@
                                             <Border  
                                                 Padding="70,3"
                                                 HorizontalOptions="Center"
-                                                BackgroundColor="Beige"
+                                                BackgroundColor="NavajoWhite"
+                                                StrokeThickness="3"
                                                 >
                                                 <Border.StrokeShape>
                                                     <RoundRectangle CornerRadius="25,25,25,25"  />
                                                 </Border.StrokeShape>
+
+                                                <Border.Stroke>
+                                                    <LinearGradientBrush EndPoint="0,1">
+                                                        <GradientStop Color="Teal"
+                                                            Offset="0.1" />
+                                                        <GradientStop Color="Teal"
+                                                         Offset="1.0" />
+                                                    </LinearGradientBrush>
+                                                </Border.Stroke>
 
                                                 <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
 
@@ -261,17 +285,20 @@
 
                                 <Frame
                                 HeightRequest="70"
-                                WidthRequest="200"
-                                CornerRadius="50"
+                                WidthRequest="220"
+                                CornerRadius="10"
                                 BackgroundColor="#1d94ab"
                                 >
-                                    <HorizontalStackLayout Spacing="5">
-                                        <Image 
+                                    <HorizontalStackLayout Spacing="5"
+                                                           HorizontalOptions="CenterAndExpand"
+                                                           VerticalOptions="CenterAndExpand"
+                                                           >
+                                        <!--<Image 
                                         HeightRequest="20"
                                         WidthRequest="20"
                                         VerticalOptions="Center"
                                         Source="message_icon"
-                                        />
+                                        />-->
                                         <Label 
                                         Text="Reservar lugar"
                                         FontSize="Medium"
@@ -286,13 +313,14 @@
 
                             </HorizontalStackLayout>
 
+                            <!--Codigo para los botones de abajo-->
                             <HorizontalStackLayout  
                             VerticalOptions="EndAndExpand" 
                             HorizontalOptions="End"
-                            Spacing="10"
+                            Padding="0,0,0,0"
                             >
 
-                                <Frame
+                                <!--<Frame
                                 HeightRequest="45"
                                 WidthRequest="45"
                                 CornerRadius="35"
@@ -303,34 +331,19 @@
                                     <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="search_icon" />
                                     <Frame.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding ProbarMPCommand}"/>
-                            </Frame.GestureRecognizers>
-                                </Frame>
-                                
-                                
-                                <Frame
-                                HeightRequest="45"
-                                WidthRequest="45"
-                                CornerRadius="35"
-                                BackgroundColor="#1d94ab"
-                                VerticalOptions="EndAndExpand" 
-                                HorizontalOptions="End"
-                                >
-                                    <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="message_icon" />
-                                    <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
-                            </Frame.GestureRecognizers>-->
-                                </Frame>
+                                    </Frame.GestureRecognizers>
+                                </Frame>-->
 
                                 <Frame
                                 HeightRequest="45"
                                 WidthRequest="45"
                                 CornerRadius="35"
-                                BackgroundColor="#1d94ab"
+                                BackgroundColor="#1d94ab"                                    
                                 >
                                     <Image  HeightRequest="25" WidthRequest="25" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Source="phone_icon" />
-                                    <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
-                            </Frame.GestureRecognizers>-->
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
+                                    </Frame.GestureRecognizers>
 
                                 </Frame>
 
@@ -340,77 +353,6 @@
                         </VerticalStackLayout>
 
                     </ScrollView>
-
-                    <!--<HorizontalStackLayout  Grid.Row="5" 
-                    VerticalOptions="EndAndExpand" 
-                    HorizontalOptions="Center"
-                    >
-
-                        <Frame
-                        HeightRequest="70"
-                        WidthRequest="200"
-                        CornerRadius="50"
-                        BackgroundColor="#1d94ab"
-                        >
-                            <HorizontalStackLayout Spacing="5">
-                                <Image 
-                                HeightRequest="20"
-                                WidthRequest="20"
-                                VerticalOptions="Center"
-                                Source="message_icon"
-                                />
-                                <Label 
-                                Text="Reservar lugar"
-                                FontSize="Medium"
-                                TextColor="White"
-                                VerticalOptions="CenterAndExpand"
-                                />
-                            </HorizontalStackLayout>
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding ReservarMesaCommand}"/>
-                            </Frame.GestureRecognizers>
-                        </Frame>
-
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout  Grid.Row="6" 
-                    VerticalOptions="EndAndExpand" 
-                    HorizontalOptions="End"
-                    Spacing="10"
-                    >
-
-                        <Frame
-                        HeightRequest="45"
-                        WidthRequest="45"
-                        CornerRadius="35"
-                        BackgroundColor="#1d94ab"
-                        VerticalOptions="EndAndExpand" 
-                        HorizontalOptions="End"
-                        >
-                            <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="message_icon" />
-                            -->
-                    <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
-                            </Frame.GestureRecognizers>-->
-                    <!--
-                        </Frame>
-
-                        <Frame
-                        HeightRequest="45"
-                        WidthRequest="45"
-                        CornerRadius="35"
-                        BackgroundColor="#1d94ab"
-                        >
-                            <Image  HeightRequest="25" WidthRequest="25" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Source="phone_icon" />
-                            -->
-                    <!--<Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
-                            </Frame.GestureRecognizers>-->
-                    <!--
-
-                        </Frame>
-
-                    </HorizontalStackLayout>-->
 
                 </Grid>
 
@@ -429,216 +371,5 @@
 
         </AbsoluteLayout>
     </RefreshView>
-
-    <!--<RefreshView IsRefreshing="{Binding IsRefreshing}"
-             Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
-
-        <ScrollView>
-
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <Image 
-            Grid.Row="0"
-            VerticalOptions="Start"
-            Aspect="Fill"
-            HeightRequest="280"
-            Grid.RowSpan="3"
-            Source="foto_resto.png"
-            />
-                
-                <ActivityIndicator IsRunning="{Binding IsActivity}" Color="Teal"  />
-                
-                <StackLayout Grid.Row="1" Margin="20,0,20,0" Orientation="Horizontal">
-                    <ImageButton 
-                Source="back_icon"
-                CornerRadius="10"
-                BackgroundColor="White"
-                HeightRequest="40"
-                WidthRequest="40"
-                Padding="5"
-                HorizontalOptions="Start"
-                VerticalOptions="Start"
-                Command="{Binding GetBackEventCommand}"
-                />
-
-                    <ImageButton 
-                Source="{Binding ImagenSource}"
-                CornerRadius="10"
-                BackgroundColor="White"
-                HeightRequest="40"
-                WidthRequest="40"
-                Padding="5"
-                HorizontalOptions="EndAndExpand"
-                VerticalOptions="Start"
-                Command="{Binding SaveFavoriteCommand}"
-                />
-                </StackLayout>
-
-                <VerticalStackLayout Grid.Row="3" Margin="20">
-
-                    <HorizontalStackLayout Padding="0,0,0,10">
-                        <Image HeightRequest="20" Source="location_icon" />
-                        <Label FontSize="Small" Padding="0,0,5,0" Text="{Binding Restaurant.BusinessName}"/>
-                    </HorizontalStackLayout>
-
-                    <HorizontalStackLayout>
-                        <Image HeightRequest="20" Source="location_icon" />
-                        <Label FontSize="Small" Padding="0,0,5,0" Text="{Binding Restaurant.Adress.Province}"/>
-                        <Label FontSize="Small" Text="{Binding Restaurant.Adress.Location}" Padding="0,0,5,0" />
-                        <Label FontSize="Small" Text="{Binding Restaurant.Adress.Street}" Padding="0,0,5,0" />
-                        <Label FontSize="Small" Text="{Binding Restaurant.Adress.Numeration}"/>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-
-
-                -->
-    <!--<ScrollView>
-
-                    <VerticalStackLayout Grid.Row="2" Spacing="20">
-                        <Label 
-                    Text="Categorias de Restaurant"
-                    FontSize="Medium"
-                    />
-
-                        <CollectionView
-                    SelectionMode="Single"
-                    HeightRequest="50"
-                    ItemsSource="{Binding CategoriesMobiles}"
-                    SelectedItem="{Binding CategoriesMobileSelected}"
-                    SelectionChangedCommand="{Binding CategoryEventSelectedCommand}"
-                    BackgroundColor="White"
-                    >
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout ItemSpacing="10"  Orientation="Horizontal"/>
-                            </CollectionView.ItemsLayout>
-
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="model:CategoriesMobileResponse">
-                                    <Border
-                                Padding="16,8"
-                                HorizontalOptions="Center"
-                                >
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="10,10,10,10"  />
-                                        </Border.StrokeShape>
-
-                                        <HorizontalStackLayout Spacing="5" HeightRequest="30">
-                                            <Image 
-                                        Aspect="AspectFit"
-                                        HeightRequest="30"
-                                        WidthRequest="30"
-                                        Source="{Binding ImgUrl}"
-                                        />
-                                            <Label 
-                                        VerticalOptions="Center"
-                                        FontSize="Medium"
-                                        Text="{Binding Name}"
-                                        />
-                                        </HorizontalStackLayout>
-
-
-                                    </Border>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-
-
-                        </CollectionView>
-
-
-                    </VerticalStackLayout>
-
-                </ScrollView>-->
-    <!--
-
-                <HorizontalStackLayout 
-            Grid.Row="4" 
-            VerticalOptions="EndAndExpand" 
-            HorizontalOptions="Center"
-            Spacing="10"
-            >
-
-                    <Frame
-                HeightRequest="70"
-                WidthRequest="150"
-                CornerRadius="35"
-                BackgroundColor="#1d94ab"
-                >
-                        <HorizontalStackLayout Spacing="10">
-                            <Image 
-                        HeightRequest="25"
-                        WidthRequest="25"
-                        VerticalOptions="Center"
-                        Source="message_icon"
-                        />
-                            <Label 
-                        Text="Reservar"
-                        FontSize="Medium"
-                        TextColor="White"
-                        VerticalOptions="Center"
-                        />
-                        </HorizontalStackLayout>
-                        -->
-    <!--<Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
-                </Frame.GestureRecognizers>-->
-    <!--
-                    </Frame>
-
-                </HorizontalStackLayout>
-
-                <HorizontalStackLayout 
-            Grid.Row="5" 
-            VerticalOptions="EndAndExpand" 
-            HorizontalOptions="End"
-            Spacing="10"
-            >
-
-                    <Frame
-                HeightRequest="45"
-                WidthRequest="45"
-                CornerRadius="35"
-                BackgroundColor="#1d94ab"
-                VerticalOptions="EndAndExpand" 
-                HorizontalOptions="End"
-                >
-                        <Image HeightRequest="25" WidthRequest="25" VerticalOptions="Center" Source="message_icon" />
-                        -->
-    <!--<Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding TextMessageOwnerCommand}"/>
-                </Frame.GestureRecognizers>-->
-    <!--
-                    </Frame>
-
-                    <Frame
-                HeightRequest="45"
-                WidthRequest="45"
-                CornerRadius="35"
-                BackgroundColor="#1d94ab"
-                >
-                        <Image  HeightRequest="25" WidthRequest="25" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Source="phone_icon" />
-                        -->
-    <!--<Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CallOwnerCommand}"/>
-                </Frame.GestureRecognizers>-->
-    <!--
-
-                    </Frame>
-
-                </HorizontalStackLayout>
-
-
-            </Grid>
-
-        </ScrollView>
-    </RefreshView>-->
-
 
 </ContentPage>

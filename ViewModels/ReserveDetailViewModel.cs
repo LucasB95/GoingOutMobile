@@ -4,24 +4,58 @@ using GoingOutMobile.Models.Restaurant;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
 using GoingOutMobile.Views;
-using MercadoPago.Resource.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace GoingOutMobile.ViewModels
 {
-    public partial class RestaurantDetailViewModel : ViewModelGlobal, IQueryAttributable
+    public partial class ReserveDetailViewModel : ViewModelGlobal, IQueryAttributable , INotifyPropertyChanged
     {
-
         [ObservableProperty]
         private string imagenSource;
 
         [ObservableProperty]
+        Booking reserve;
+
+        [ObservableProperty]
         private RestaurantResponse restaurant;
+
+        [ObservableProperty]
+        private bool isActivity = false;
+
+        [ObservableProperty]
+        bool isRefreshing;
+
+        [ObservableProperty]
+        private string idBooking;
+
+        [ObservableProperty]
+        private string idClient;
+
+        [ObservableProperty]
+        public string cantidadSelected;
+
+        [ObservableProperty]
+        public DateTime selectedDate;
+
+        [ObservableProperty]
+        public TimeSpan selectedTime;
+
+        [ObservableProperty]
+        public DateTime minDate = DateTime.Now;
+
+        [ObservableProperty]
+        public string observation;
+
+        [ObservableProperty]
+        private bool isVisible;
 
         [ObservableProperty]
         private MenuResponse menu;
@@ -39,29 +73,24 @@ namespace GoingOutMobile.ViewModels
 
         public ObservableCollection<MenuCategoriesDrinks> DrinksList { get; private set; } = new ObservableCollection<MenuCategoriesDrinks>();
 
-        [ObservableProperty]
-        bool isRefreshing;
-
-        [ObservableProperty]
-        private string idClient;
-
-        [ObservableProperty]
-        private string pageReturn;
-
-        [ObservableProperty]
-        private bool isActivity = false;
-
         public Command GetDataCommand { get; set; }
 
-        private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
-        private readonly IMercadoPagoService _mercadoPagoService;
+        private readonly IRestaurantService _restaurantService;
 
-        public RestaurantDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPagoService mercadoPagoService)
+        public ReserveDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService)
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
-            _mercadoPagoService = mercadoPagoService;
+
+        }
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            IdClient = query["id"].ToString();
+            IdBooking = query["idBooking"].ToString();
+
+            IsRefreshing = true;
+            await RefreshCommand.ExecuteAsync(this);
         }
 
         public async Task LoadDataAsync()
@@ -74,15 +103,16 @@ namespace GoingOutMobile.ViewModels
             try
             {
                 IsBusy = true;
+                var UserId = Preferences.Get("IdUser", string.Empty);
+                Reserve = await _restaurantService.GetBookingsRestaurant(UserId, IdBooking);
                 Restaurant = await _restaurantService.DetailsRestaurant(IdClient);
+
+                #region Menu
                 Menu = await _restaurantService.GetClientMenu(IdClient);
 
                 this.Categories = new List<CategoriesRestaurantResponse>(Menu.Categories);
-
                 Dishes = new ObservableCollection<DishesResponse>(Menu.Dishes);
-
                 Drinks = new ObservableCollection<DrinksResponse>(Menu.Drinks);
-
 
                 var CategoriesId = this.Categories.Select(c => c.Id).ToList();
 
@@ -116,14 +146,28 @@ namespace GoingOutMobile.ViewModels
                 DishesList.OrderBy(x => x.IdCategory).ToList();
                 DrinksList.OrderBy(x => x.IdCategory).ToList();
 
-                var favorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
+                #endregion
 
-                if (favorites != null || favorites.Count() > 0)
+                if (Reserve == null || Restaurant == null)
                 {
-                    Restaurant.IsBookmarkEnabled = favorites.Any(x => x.IdClient == Restaurant.IdClient);
+                    await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la reserva", "Aceptar");
+                }
+                else
+                {
+                    SelectedTime = Reserve.Date.TimeOfDay;
+                    SelectedDate = Reserve.Date;
+
+                    var favorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
+
+                    if (favorites != null || favorites.Count() > 0)
+                    {
+                        Restaurant.IsBookmarkEnabled = favorites.Any(x => x.IdClient == Restaurant.IdClient);
+                    }
+
+                    ImagenSource = Restaurant.IsBookmarkEnabled ? "bookmark_fill_icon" : "bookmark_empty_icon";
+
                 }
 
-                ImagenSource = Restaurant.IsBookmarkEnabled ? "bookmark_fill_icon" : "bookmark_empty_icon";
             }
             catch (Exception e)
             {
@@ -137,13 +181,17 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
-        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        [RelayCommand]
+        public async void ChangeIsVisible()
         {
-            IdClient = query["id"].ToString();
-            PageReturn = query["page"].ToString();
-
-            IsRefreshing = true;
-            await RefreshCommand.ExecuteAsync(this);
+            if (IsVisible)
+            {
+                IsVisible = false;
+            }
+            else
+            {
+                IsVisible = true;
+            }
         }
 
         [RelayCommand]
@@ -156,34 +204,24 @@ namespace GoingOutMobile.ViewModels
         }
 
         [RelayCommand]
-        async Task GetBackEvent()
+        async Task MapsEvent()
         {
-            var uri = $"//{nameof(HomePage)}";
-            if (PageReturn.Contains("RestaurantListPage"))
-            {
-                var category = Preferences.Get("nameCategory", string.Empty);
-                uri = $"{nameof(RestaurantListPage)}?nameCategory={category}";
-            }
-            else if (PageReturn.Contains("RestaurantFindListPage"))
-            {
-                uri = $"/{nameof(RestaurantFindListPage)}";
-            }
 
-            await _navegacionService.GoToAsync(uri);
+            string address = Restaurant.Adress.Numeration + " " + Restaurant.Adress.Street + ", " + Restaurant.Adress.Location + ", " + Restaurant.Adress.Province;
+            string encodedAddress = Uri.EscapeDataString(address);
+
+            // Create the URI for Google Maps
+            Uri mapsUri = new Uri($"https://www.google.com/maps/search/?api=1&query={encodedAddress}");
+
+            // Open the URI
+            await Launcher.Default.OpenAsync(mapsUri);
         }
 
         [RelayCommand]
-        async Task ProbarMP()
+        async Task GetBackEvent()
         {
-            //var resultado1 = await _mercadoPagoService.MPCorto();
-            var resultado = await _mercadoPagoService.preparandoMP();
-
-            var uri = new Uri(resultado[1]);
-            await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
-
-
-            //var uri = $"{nameof(MercadoPagoPage)}";
-            //await _navegacionService.GoToAsync(uri);
+            var uri = $"//{nameof(ReserveListPage)}";
+            await _navegacionService.GoToAsync(uri);
         }
 
         [RelayCommand]
@@ -243,86 +281,5 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
-        [RelayCommand]
-        async Task ReservarMesa()
-        {
-            var uri = $"{nameof(BookingsPage)}?id={IdClient}&page={nameof(RestaurantDetailPage)}";
-            await _navegacionService.GoToAsync(uri);
-        }
-
-        [RelayCommand]
-        async Task MapsEvent()
-        {
-
-            string address = Restaurant.Adress.Numeration + " " + Restaurant.Adress.Street + ", " + Restaurant.Adress.Location + ", " + Restaurant.Adress.Province;
-            string encodedAddress = Uri.EscapeDataString(address);
-
-            // Create the URI for Google Maps
-            Uri mapsUri = new Uri($"https://www.google.com/maps/search/?api=1&query={encodedAddress}");
-
-            // Open the URI
-            await Launcher.Default.OpenAsync(mapsUri);
-        }
-
-        [RelayCommand]
-        async Task CallOwner()
-        {
-            if (String.IsNullOrEmpty(Restaurant.PhoneNumber))
-            {
-                await Application.Current.MainPage
-                       .DisplayAlert(
-                       "No se puede realizar esta llamada",
-                       "Debido a que el Resturant no proporciono un telefóno valido",
-                       "Ok");
-            }
-            else
-            {
-                var confirmarLlamada = Application.Current.MainPage.DisplayAlert(
-                        "Marca este numero telefonico",
-                        $"Desea llamar a este numero: {Restaurant.PhoneNumber}",
-                        "Si",
-                        "No"
-                    );
-
-                if (await confirmarLlamada)
-                {
-                    try
-                    {
-                        PhoneDialer.Open(Restaurant.PhoneNumber);
-                    }
-                    catch (ArgumentNullException)
-                    {
-                        await Application.Current.MainPage
-                            .DisplayAlert(
-                            "No se puede realizar esta llamada",
-                            "El numero telefonico no es valido",
-                            "Ok");
-                    }
-                    catch (FeatureNotSupportedException)
-                    {
-                        await Application.Current.MainPage
-                            .DisplayAlert(
-                            "No se puede realizar esta llamada",
-                            "El dispositivo no soporta llamadas telefonicas",
-                            "Ok");
-                    }
-                    catch (Exception)
-                    {
-                        await Application.Current.MainPage
-                            .DisplayAlert(
-                            "No se puede realizar esta llamada",
-                            "Errores en la marcacion del numero",
-                            "Ok");
-                    }
-
-                }
-
-            }
-
-        }
-
     }
-
-
-
 }

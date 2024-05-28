@@ -78,46 +78,81 @@
 
             <VerticalStackLayout>
 
-
                 <Border StrokeThickness="3"
-                StrokeShape="RoundRectangle 40,0,0,40"
-                Background="{StaticResource Secondary}"                
-                WidthRequest="350"
-                HeightRequest="50">
+                 StrokeShape="RoundRectangle 40,0,0,40"
+                 Background="WhiteSmoke"                
+                 WidthRequest="350"
+                 HeightRequest="50">
                     <Border.Stroke>
                         <LinearGradientBrush EndPoint="0,1">
-                            <GradientStop Color="#002a41"
-                          Offset="0.1" />
-                            <GradientStop Color="#037eb5"
-                          Offset="1.0" />
+                            <GradientStop Color="Black"
+                            Offset="0.1" />
+                            <GradientStop Color="Teal"
+                            Offset="1.0" />
                         </LinearGradientBrush>
                     </Border.Stroke>
-                    <Label Text="Ingresar"
-                   TextColor="Teal"
-                   FontSize="Medium"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                    <Label Text="Continuar"
+                        TextColor="Black"
+                        FontSize="Medium"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding LoginMethodCommand}"/>
                     </Border.GestureRecognizers>
                 </Border>
 
-                <Border StrokeThickness="3"
-                StrokeShape="RoundRectangle 0,40,40,0"
-                Background="{StaticResource Secondary}"
+                <!--<Border StrokeThickness="3"
+                StrokeShape="RoundRectangle 40,0,0,40"
+                Background="WhiteSmoke"                
                 WidthRequest="350"
                 HeightRequest="50">
                     <Border.Stroke>
                         <LinearGradientBrush EndPoint="0,1">
-                            <GradientStop Color="#037eb5"
+                            <GradientStop Color="Black"
                           Offset="0.1" />
-                            <GradientStop Color="#002a41"
+                            <GradientStop Color="Teal"
+                          Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+                    <HorizontalStackLayout
+                      >
+                        <Image Source="logogoogle" 
+                           HeightRequest="30" 
+                           WidthRequest="30" 
+                           Margin="10,0,0,0"
+                           VerticalOptions="Center" />
+                        <Label Text="Continuar con Google"
+                           TextColor="Black"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           Margin="20,0,0,0"
+                        />
+                    </HorizontalStackLayout>
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding LoginGoogleMethodCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>-->
+
+
+
+                <Border StrokeThickness="3"
+                StrokeShape="RoundRectangle 0,40,40,0"
+                Background="WhiteSmoke"
+                WidthRequest="350"
+                HeightRequest="50">
+                    <Border.Stroke>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="Teal"
+                          Offset="0.1" />
+                            <GradientStop Color="Teal"
                           Offset="1.0" />
                         </LinearGradientBrush>
                     </Border.Stroke>
                     <Label Text="Regístrate"
-                   TextColor="Teal"
+                   TextColor="Black"
                    FontSize="Medium"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
@@ -145,125 +180,6 @@
         </AbsoluteLayout>
     </AbsoluteLayout>
 
-
-    <!--<VerticalStackLayout 
-        VerticalOptions="Center"
-        Margin="20,0,20,0"
-        Spacing="20"
-        >
-        
-        <ActivityIndicator IsRunning="{Binding IsActivity}" Color="Teal"  />
-        
-        <Image
-            Source="logo_secund.png"
-            HorizontalOptions="Center"
-            HeightRequest="130"
-            WidthRequest="300"
-            />        
-
-        <Label 
-            Text="Iniciá sesión con tu e-mail"
-            TextColor="Black"
-            FontSize="Medium"
-            FontAttributes="Bold"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-
-        <Label
-            Text="Solo podrás usar este método si ya tenias registrada una cuenta."
-            TextColor="Black"
-            FontSize="Micro"
-            HorizontalOptions="Center"            
-            />
-
-        <Entry
-            Text="{Binding UserName}"
-            Placeholder="E-mail:"
-            PlaceholderColor="Black"
-            MaxLength="200"
-            MinimumWidthRequest="350" 
-            WidthRequest="350"
-            HorizontalOptions="Start"
-            />
-
-        <HorizontalStackLayout>
-
-            <Entry
-            Text="{Binding Password}"
-            Placeholder="Contraseña:"
-            IsPassword="{Binding IsPassword}"
-            PlaceholderColor="Black"
-            MaxLength="150"
-            MinimumWidthRequest="350" 
-            WidthRequest="350"
-            HorizontalOptions="Start"
-            />
-
-            <ImageButton 
-                Source="{Binding IconSeePass}"  
-                HeightRequest="20" 
-                WidthRequest="20" 
-                Command="{Binding ChangeStatusPasswordCommand}"
-                HorizontalOptions="End"/>
-
-        </HorizontalStackLayout>
-
-        <VerticalStackLayout>
-
-            
-            <Border StrokeThickness="3"
-                StrokeShape="RoundRectangle 40,0,0,40"
-                Background="{StaticResource Secondary}"                
-                WidthRequest="350"
-                HeightRequest="50">    
-                <Border.Stroke>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#002a41"
-                          Offset="0.1" />
-                        <GradientStop Color="#037eb5"
-                          Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Stroke>
-                <Label Text="Ingresar"
-                   TextColor="Teal"
-                   FontSize="Medium"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>                
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding LoginMethodCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
-
-            <Border StrokeThickness="3"
-                StrokeShape="RoundRectangle 0,40,40,0"
-                Background="{StaticResource Secondary}"
-                WidthRequest="350"
-                HeightRequest="50">    
-                <Border.Stroke>
-                    <LinearGradientBrush EndPoint="0,1">
-                        <GradientStop Color="#037eb5"
-                          Offset="0.1" />
-                        <GradientStop Color="#002a41"
-                          Offset="1.0" />
-                    </LinearGradientBrush>
-                </Border.Stroke>
-                <Label Text="Regístrate"
-                   TextColor="Teal"
-                   FontSize="Medium"
-                   FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding CreateUserCommand}"/>
-                </Border.GestureRecognizers>
-            </Border>
-            
-            
-        </VerticalStackLayout>
-
-
-    </VerticalStackLayout>-->
 
 
 </ContentPage>

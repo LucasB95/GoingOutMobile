@@ -15,6 +15,9 @@ namespace GoingOutMobile.Models.Restaurant
         [JsonProperty("businessName")]
         public string BusinessName { get; set; }
 
+        [JsonProperty("phoneNumber")]
+        public string PhoneNumber { get; set; }
+
         [JsonProperty("isBookmarkEnabled")]
         public bool IsBookmarkEnabled { get; set; }
 

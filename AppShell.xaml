@@ -31,6 +31,12 @@
             Icon="start"
         />
 
+    <ShellContent
+            Title="Reservas"
+            ContentTemplate="{DataTemplate views:ReserveListPage}"
+            Route="ReserveListPage" 
+            Icon="booking"
+        />
 
     <ShellContent
             Title="Mis Favoritos"

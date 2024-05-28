@@ -68,14 +68,23 @@ public static class MauiProgram
         builder.Services.AddTransient<RestaurantFindListViewModel>();
         builder.Services.AddTransient<RestaurantFindListPage>();
 
+        builder.Services.AddTransient<ReserveListViewModel>();
+        builder.Services.AddTransient<ReserveListPage>();
+
+        builder.Services.AddTransient<ReserveDetailViewModel>();
+        builder.Services.AddTransient<ReserveDetailPage>();
+
         Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(LoginGooglePage), typeof(LoginGooglePage));
         Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
         Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
 
         Routing.RegisterRoute(nameof(RestaurantListPage), typeof(RestaurantListPage));
         Routing.RegisterRoute(nameof(RestaurantDetailPage), typeof(RestaurantDetailPage));
         Routing.RegisterRoute(nameof(RestaurantFindListPage), typeof(RestaurantFindListPage));
+        Routing.RegisterRoute(nameof(ReserveDetailPage), typeof(ReserveDetailPage));
+        Routing.RegisterRoute(nameof(ReserveListPage), typeof(ReserveListPage));
         Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
 
 #if DEBUG

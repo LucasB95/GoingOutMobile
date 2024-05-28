@@ -48,15 +48,14 @@ namespace GoingOutMobile.Services
 
             }
         }
-
-        public async Task<RestaurantResponse> GetClient(string idRestaurant)
+        public async Task<RestaurantResponse> DetailsRestaurant(string idRestaurant)
         {
             await ValidaToken();
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var url = $"{settings.UrlBase}/Clients/GetClient";
 
@@ -66,11 +65,43 @@ namespace GoingOutMobile.Services
 
             var response = await client.PostAsync(url, content);
 
-            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
 
             var jsonResult = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<RestaurantResponse>(jsonResult);
+        }
+        public async Task<IEnumerable<RestaurantResponse>> GetRestaurantSearch(string search)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
+
+            if (string.IsNullOrEmpty(search))
+            {
+                throw new ArgumentNullException(nameof(search));
+            }
+            var url = $"{settings.UrlBase}/Clients/GetRestaurantSearch/{search}";
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
         }
 
         #region Favorites
@@ -80,14 +111,19 @@ namespace GoingOutMobile.Services
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var uri = $"{settings.UrlBase}/Favorites/{idUser}";
 
             var resultado = await client.GetAsync(uri);
 
-            if (!resultado.IsSuccessStatusCode) return new List<RestaurantResponse>();
+            if (!resultado.IsSuccessStatusCode)
+            {
+                var errorMessage = await resultado.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
 
             var jsonResult = await resultado.Content.ReadAsStringAsync();
 
@@ -99,8 +135,8 @@ namespace GoingOutMobile.Services
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var uri = $"{settings.UrlBase}/Favorites/AddFavorites";
 
@@ -127,8 +163,8 @@ namespace GoingOutMobile.Services
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var uri = $"{settings.UrlBase}/Favorites/DelFavorites";
 
@@ -151,18 +187,25 @@ namespace GoingOutMobile.Services
         }
         #endregion
 
+        #region Categories y Menu
         public async Task<List<CategoriesMobileResponse>> GetCategories()
         {
             await ValidaToken();
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var uri = $"{settings.UrlBase}/Categories";
 
             var resultado = await client.GetAsync(uri);
+
+            if (!resultado.IsSuccessStatusCode)
+            {
+                var errorMessage = await resultado.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
 
             var jsonResult = await resultado.Content.ReadAsStringAsync();
 
@@ -174,8 +217,7 @@ namespace GoingOutMobile.Services
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var url = $"{settings.UrlBase}/Clients/GetCategories";
 
@@ -190,11 +232,16 @@ namespace GoingOutMobile.Services
 
             var response = await client.PostAsync(url, content);
 
-            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
 
             var jsonResult = await response.Content.ReadAsStringAsync();
 
-            return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
+            return JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
         }
         public async Task<MenuResponse> GetClientMenu(string idRestaurant)
         {
@@ -202,8 +249,7 @@ namespace GoingOutMobile.Services
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var url = $"{settings.UrlBase}/Clients/GetClientMenu";
 
@@ -213,37 +259,105 @@ namespace GoingOutMobile.Services
 
             var response = await client.PostAsync(url, content);
 
-            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
 
             var jsonResult = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<MenuResponse>(jsonResult);
         }
 
+        #endregion
 
-        public async Task<IEnumerable<RestaurantResponse>> GetRestaurantSearch(string search)
+        #region Reservas
+        public async Task<bool> NewReserve(BookingCreate bookingCreate)
         {
             await ValidaToken();
 
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
-            client.DefaultRequestHeaders.Authorization = new
-            AuthenticationHeaderValue("Bearer", Preferences.Get("tokenGoingOut", string.Empty));
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
-            if (string.IsNullOrEmpty(search))
+            var url = $"{settings.UrlBase}/Bookings/NewReserve";
+
+            var json = JsonConvert.SerializeObject(bookingCreate);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode) return false;
+
+            return true;
+        }
+        public async Task<IEnumerable<Booking>> GetBookings(string IdUser)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
+
+            if (string.IsNullOrEmpty(IdUser))
             {
-                throw new ArgumentNullException(nameof(search));
+                throw new ArgumentNullException(nameof(IdUser));
             }
-            var url = $"{settings.UrlBase}/Clients/GetRestaurantSearch/{search}";
 
-            var response = await client.GetAsync(url);
 
-            if (!response.IsSuccessStatusCode) throw new ArgumentNullException(nameof(response));
+            var uri = $"{settings.UrlBase}/Bookings/ListBooking/{IdUser}";
+
+            var response = await client.GetAsync(uri);
+
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<Booking>();
+            }
+
 
             var jsonResult = await response.Content.ReadAsStringAsync();
 
-            return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
+            return JsonConvert.DeserializeObject<List<Booking>>(jsonResult);
+        }
+        public async Task<Booking> GetBookingsRestaurant(string IdUser, string IdBooking)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
+
+            if (string.IsNullOrEmpty(IdUser) || string.IsNullOrEmpty(IdBooking))
+            {
+                throw new ArgumentNullException(nameof(IdUser));
+            }
+
+            var uri = $"{settings.UrlBase}/Bookings/{IdUser}&{IdBooking}";
+
+            var response = await client.GetAsync(uri);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<Booking>(jsonResult);
         }
 
+        #endregion
     }
 }

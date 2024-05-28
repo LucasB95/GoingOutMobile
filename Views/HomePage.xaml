@@ -5,9 +5,258 @@
              xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
              x:DataType="vm:HomeViewModel"
              x:Class="GoingOutMobile.Views.HomePage"
-             Title="HomePage">
+             BackgroundColor="{StaticResource Primary}"
+             Title="GoingOut"
+             >
+
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}"
+             Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
+        <AbsoluteLayout VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                AbsoluteLayout.LayoutFlags="All"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
+
+                <Grid Margin="20" RowSpacing="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <VerticalStackLayout Grid.Row="0" Spacing="5">
+
+                        <HorizontalStackLayout Spacing="20" Padding="10,10,10,10" >
+                            <Image Source="profile" HeightRequest="30" WidthRequest="30"  />
+                            <VerticalStackLayout>
+                                <Label  Text="{Binding NombreUsuario}" FontSize="Large"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <Border 
+                        Grid.Row="1"
+                        Padding="15"
+                        BackgroundColor="WhiteSmoke"
+                        StrokeThickness="3"
+                        >
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20,20,20,20"  />
+                        </Border.StrokeShape>
+
+                        <Border.Stroke>
+                            <LinearGradientBrush EndPoint="0,1">
+                                <GradientStop Color="Teal"
+                                 Offset="0.1" />
+                                <GradientStop Color="Teal"
+                                 Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Stroke>
+                        
+                        <HorizontalStackLayout Spacing="20">
+                            <Image Source="search_icon" 
+                               Aspect="AspectFit" 
+                               HeightRequest="25"
+                               WidthRequest="25"
+                               />
+                            <Label 
+                                Text="Busqueda"
+                                VerticalOptions="Center"
+                                />  
+                        </HorizontalStackLayout>
+                        
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TapBusquedaRestaurantCommand}"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <VerticalStackLayout Grid.Row="2" Spacing="20">
+                        <Label 
+                            Text="Categorias de Restaurant"
+                            FontSize="Large"
+                            />      
+
+                        <CollectionView
+                            SelectionMode="Single"
+                            HeightRequest="50"
+                            ItemsSource="{Binding CategoriesMobiles}"
+                            SelectedItem="{Binding CategoriesMobileSelected}"
+                            SelectionChangedCommand="{Binding CategoryEventSelectedCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            >
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout ItemSpacing="10"  Orientation="Horizontal"/>
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:CategoriesMobileResponse">
+                                    <Border
+                                        Padding="16,8"
+                                        HorizontalOptions="Center"
+                                        BackgroundColor="WhiteSmoke"
+                                        StrokeThickness="3"
+                                        >   
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="20,20,20,20"  />
+                                        </Border.StrokeShape>
+
+                                        <Border.Stroke>
+                                            <LinearGradientBrush EndPoint="0,1">
+                                                <GradientStop Color="Teal"
+                                                    Offset="0.1" />
+                                                <GradientStop Color="Teal"
+                                                 Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Stroke>
+
+                                        <HorizontalStackLayout Spacing="5" HeightRequest="30">
+                                            <Image 
+                                            Aspect="AspectFit"
+                                            HeightRequest="30"
+                                            WidthRequest="30"
+                                            Source="{Binding ImgUrl}"
+                                            />
+                                            <Label 
+                                            VerticalOptions="Center"
+                                            FontSize="Medium"
+                                            Text="{Binding Name}"
+                                            TextColor="Black"
+                                            />      
+                                        </HorizontalStackLayout>
+
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="3" Spacing="20">
+                        <Label 
+                        Text="Mis Restaurant Favoritos"
+                        FontSize="Large"
+                        />    
+                        
+                        <CollectionView 
+                        HeightRequest="300"
+                        SelectionMode="Single"
+                        ItemsSource="{Binding Favorites}"
+                        SelectedItem="{Binding RestaurantSelected, Mode=TwoWay}"
+                        >   
+
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:RestaurantResponse">
+                                    
+                                    <Border
+                                    Padding="16,8"
+                                    HorizontalOptions="Center"
+                                    BackgroundColor="WhiteSmoke"
+                                    StrokeThickness="3"
+                                    >
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10,10,10,10"  />
+                                        </Border.StrokeShape>
+
+                                        <Border.Stroke>
+                                            <LinearGradientBrush EndPoint="0,1">
+                                                <GradientStop Color="Teal"
+                                                 Offset="0.1" />
+                                                <GradientStop Color="Teal"
+                                                 Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Stroke>
+                                        
+                                        <Grid RowSpacing="5" >                                            
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Frame
+                                            Grid.Row="0"
+                                            HeightRequest="150"
+                                            WidthRequest="180"
+                                            CornerRadius="25"
+                                            Padding="0"
+                                            IsClippedToBounds="True"
+                                            BorderColor="Black"
+                                            >
+                                                <Image 
+                                                Aspect="Fill"
+                                                Source="foto_resto.png"
+                                                />  
+                                            </Frame>
+                                            <Label 
+                                            Grid.Row="1"
+                                            Text="{Binding BusinessName}"
+                                            FontSize="Medium"
+                                            TextColor="Black"
+                                            HorizontalOptions="CenterAndExpand"
+                                            />
+                                            <Label 
+                                            Grid.Row="2"
+                                            FontSize="Medium"
+                                            Text="{Binding Adress.Province}" 
+                                            HorizontalOptions="CenterAndExpand" />
+                                            <HorizontalStackLayout  
+                                                HorizontalOptions="CenterAndExpand"
+                                                Grid.Row="3">
+                                                <Label                                                   
+                                                FontSize="Medium"
+                                                Text="{Binding Adress.Street}"
+                                                TextColor="Black"
+                                                Padding="0,0,5,0"
+                                                />
+                                                <Label 
+                                                FontSize="Medium"
+                                                Text="{Binding Adress.Numeration}"
+                                                TextColor="Black"
+                                                />
+
+                                            </HorizontalStackLayout>
+
+                                        </Grid>
+
+                                    </Border>
+                                </DataTemplate>
+
+                            </CollectionView.ItemTemplate>
+
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+
+                </Grid>
+
+            </ScrollView>
+            <AbsoluteLayout
+                    AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    IsVisible="True">
+                <ActivityIndicator Color="Teal"
+                           AbsoluteLayout.LayoutBounds="0.5,0.5,0.1,0.1"
+                           AbsoluteLayout.LayoutFlags="All"
+                           IsVisible="True"
+                           IsRunning="{Binding IsBusy}"/>
+            </AbsoluteLayout>
+
+        </AbsoluteLayout>
+    </RefreshView>
+
+
+
+
+
+    <!--<RefreshView IsRefreshing="{Binding IsRefreshing}"
              Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
 
         <ScrollView>
@@ -99,86 +348,11 @@
 
                 </VerticalStackLayout>
 
-                <!--<VerticalStackLayout Grid.Row="3" Spacing="20">
-                <Label 
-                    Text="Mis Inmuebles Favoritos"
-                    FontSize="Large"
-                    />
-                <CollectionView 
-                    HeightRequest="350"
-                    SelectionMode="Single"
-                    ItemsSource="{Binding FavoriteInmuebles}"
-                    >
-
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
-                    </CollectionView.ItemsLayout>
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="model:InmuebleResponse">
-                            <Frame 
-                                CornerRadius="25"
-                                Padding="15"
-                                BackgroundColor="White"
-                                >
-                                <Grid RowSpacing="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <Frame
-                                        Grid.Row="0"
-                                        HeightRequest="200"
-                                        WidthRequest="250"
-                                        CornerRadius="25"
-                                        Padding="0"
-                                        IsClippedToBounds="True"
-                                        >
-                                        <Image 
-                                            Aspect="Fill"
-                                            Source="{Binding ImagenUrl}"
-                                            />
-                                    </Frame>
-                                    <Label 
-                                        Grid.Row="1"
-                                        Text="{Binding Nombre}"
-                                        FontSize="Subtitle"
-                                        />
-                                    <Label 
-                                        Grid.Row="2"
-                                        Text="{Binding Detalle}"
-                                        FontSize="Small"
-                                         WidthRequest="250"
-                                         LineBreakMode="TailTruncation"
-                                        />
-                                    <Label 
-                                        Grid.Row="3"
-                                        Text="{Binding Precio, StringFormat='{0:C}'}"
-                                        FontSize="Subtitle"
-                                        TextColor="#1d94ab"
-                                        />
-
-                                </Grid>
-
-
-                            </Frame>
-                        </DataTemplate>
-
-                    </CollectionView.ItemTemplate>
-
-
-                </CollectionView>
-
-
-            </VerticalStackLayout>-->
-
             </Grid>
 
         </ScrollView>
 
-    </RefreshView>
+    </RefreshView>-->
 
 
 </ContentPage>

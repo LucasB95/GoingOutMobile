@@ -110,5 +110,12 @@ namespace GoingOutMobile.ViewModels
             await _navegacionService.GoToAsync(uri);
         }
 
+        [RelayCommand(CanExecute = nameof(StatusConnection))]
+        async Task LoginGoogleMethod()
+        {
+            var uri = $"{nameof(LoginGooglePage)}";
+            await _navegacionService.GoToAsync(uri);
+        }
+
     }
 }

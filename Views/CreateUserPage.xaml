@@ -89,19 +89,19 @@
 
         <Border StrokeThickness="3"
                 StrokeShape="RoundRectangle 0,40,40,0"
-                Background="{StaticResource Secondary}"
+                Background="WhiteSmoke"
                 WidthRequest="350"
                 HeightRequest="50">
             <Border.Stroke>
                 <LinearGradientBrush EndPoint="0,1">
-                    <GradientStop Color="#037eb5"
+                    <GradientStop Color="Black"
                           Offset="0.1" />
-                    <GradientStop Color="#002a41"
+                    <GradientStop Color="Teal"
                           Offset="1.0" />
                 </LinearGradientBrush>
             </Border.Stroke>
             <Label Text="Registrarme"
-                   TextColor="Teal"
+                   TextColor="Black"
                    FontSize="Medium"
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
