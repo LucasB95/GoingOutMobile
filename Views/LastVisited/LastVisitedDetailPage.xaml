@@ -77,18 +77,24 @@
 
                         <VerticalStackLayout>
                             <HorizontalStackLayout>
-                                <ImageButton HeightRequest="20" Source="location_icon" Command="{Binding MapsEventCommand}"/>
+                                <!--<ImageButton HeightRequest="20" Source="location_icon" Command="{Binding MapsEventCommand}"/>-->
+                                <ImageButton HeightRequest="20" Source="location_icon"/>
                                 <Label FontSize="Subtitle" TextColor="Black" Padding="0,0,5,0" Text="{Binding Restaurant.Adress.Province, StringFormat='{0},'}"/>
                                 <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Location, StringFormat='{0}: '}" Padding="0,0,5,0" />
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout
                             VerticalOptions="StartAndExpand"
-                            Padding="43,0,0,0"
+                            Padding="45,0,0,0"
                             >
                                 <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Street}" Padding="0,0,5,0" />
                                 <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Numeration}"/>
                             </HorizontalStackLayout>
+                            
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding MapsEventCommand}" />
+                            </VerticalStackLayout.GestureRecognizers>
+                            
                         </VerticalStackLayout>
 
                         <Label 
