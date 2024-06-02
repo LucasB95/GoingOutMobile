@@ -177,7 +177,43 @@ namespace GoingOutMobile.Services
 
         }
 
+        public async Task<string> ChangePassword(ChangePassRequest changePass)
+        {
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
 
+            var url = $"{settings.UrlBase}/Authentication/ChangePassword";
+
+            var changePassRequest = new ChangePassRequest
+            {
+                UserName = changePass.UserName,
+                Email = changePass.Email,
+                PasswordOld = changePass.PasswordOld,
+                PasswordNew = changePass.PasswordNew
+            };
+
+            var json = JsonConvert.SerializeObject(changePassRequest);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                var respuesta = "Usuario no encontrado o contraseña actual mal ingresada";
+                return respuesta;
+            }
+
+            return "Ok";
+
+
+        }
     }
 
 

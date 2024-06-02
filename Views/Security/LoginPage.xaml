@@ -85,7 +85,7 @@
                  HeightRequest="50">
                     <Border.Stroke>
                         <LinearGradientBrush EndPoint="0,1">
-                            <GradientStop Color="Black"
+                            <GradientStop Color="Teal"
                             Offset="0.1" />
                             <GradientStop Color="Teal"
                             Offset="1.0" />

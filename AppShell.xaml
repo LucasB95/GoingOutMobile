@@ -52,59 +52,11 @@
             Icon="lastvisited"
         />
 
-    <!--<ShellContent
-            Title="MisGastos"
-            ContentTemplate="{DataTemplate views:MyExpensesPage}"
-            Route="MyExpensesPage"   
-            Icon="expenses"
-        />-->
-
     <ShellContent 
            Title="Configuracion"
            ContentTemplate="{DataTemplate views:SettingsPage}"
            Route="SettingsPage"
            Icon="settings_icon"
            />
-
-
-    <!--<MenuItem 
-        Text="Cerrar Sesión"
-        Clicked="CerrarSesion"
-        />-->
-
-    <!--<FlyoutItem Title="Tabs">
-        <Tab Title="Resumen" Icon="home_icon">
-            <ShellContent 
-                Title="Resumen"
-                ContentTemplate="{DataTemplate views:MyExpensesPage}"
-                Route="MyExpensesPage"
-                />
-        </Tab>
-
-        <Tab Title="Guardados" Icon="bookmark_icon">
-            <ShellContent 
-                Title="Guardados"
-                ContentTemplate="{DataTemplate views:MyExpensesPage}"
-                Route="MyExpensesPage"
-                />
-        </Tab>
-
-        <Tab Title="Configuracion" Icon="settings_icon">
-            <ShellContent 
-                Title="Configuracion"
-                ContentTemplate="{DataTemplate views:SettingsPage}"
-                Route="SettingsPage"
-                Icon="settings_icon"
-                />
-        </Tab>
-
-
-    </FlyoutItem>-->
-
-
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior 
-        Command="{Binding Back_Command}"/>
-    </Shell.BackButtonBehavior>-->
 
 </Shell>

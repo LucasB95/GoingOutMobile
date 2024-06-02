@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoingOutMobile.Views.LastVisited.LastVisitedDetailPage"
+             xmlns:model="clr-namespace:GoingOutMobile.Models.Restaurant"
+             xmlns:vm="clr-namespace:GoingOutMobile.ViewModels.Reserve"
+             x:DataType="vm:LastVisitedDetailViewModel"
+             Title="Detalle de Reserva"
+             Shell.NavBarIsVisible="false"
+             BackgroundColor="{StaticResource Primary}"
+             >
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+     Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
+        <AbsoluteLayout VerticalOptions="FillAndExpand" 
+        HorizontalOptions="FillAndExpand">
+            <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+        AbsoluteLayout.LayoutFlags="All"
+        VerticalOptions="FillAndExpand"
+        HorizontalOptions="FillAndExpand">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Image 
+                    Grid.Row="0"
+                    VerticalOptions="Start"
+                    Aspect="Fill"
+                    HeightRequest="250"
+                    WidthRequest="250"
+                    Grid.RowSpan="3"
+                    Source="foto_resto.png"
+                    BackgroundColor="WhiteSmoke"
+                    />
+
+                    <StackLayout Grid.Row="1" Margin="20,0,20,0" Orientation="Horizontal">
+                        <ImageButton 
+                         Source="back_icon"
+                         CornerRadius="10"
+                         BackgroundColor="White"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Padding="5"
+                         HorizontalOptions="Start"
+                         VerticalOptions="Start"
+                         Command="{Binding GetBackEventCommand}"
+                        />
+
+                        <ImageButton 
+                         Source="{Binding ImagenSource}"
+                         CornerRadius="10"
+                         BackgroundColor="White"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Padding="5"
+                         HorizontalOptions="EndAndExpand"
+                         VerticalOptions="Start"
+                         Command="{Binding SaveFavoriteCommand}"
+                        />
+
+                    </StackLayout>
+
+                    <VerticalStackLayout Grid.Row="3" Margin="5">
+
+                        <HorizontalStackLayout Padding="0,0,0,5" VerticalOptions="CenterAndExpand"  HorizontalOptions="CenterAndExpand">
+                            <!--<Image HeightRequest="20" Source="location_icon" />-->
+                            <Label FontSize="Medium" TextColor="Black" Padding="0,0,5,0" Text="{Binding Restaurant.BusinessName}"/>
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout>
+                            <HorizontalStackLayout>
+                                <ImageButton HeightRequest="20" Source="location_icon" Command="{Binding MapsEventCommand}"/>
+                                <Label FontSize="Subtitle" TextColor="Black" Padding="0,0,5,0" Text="{Binding Restaurant.Adress.Province, StringFormat='{0},'}"/>
+                                <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Location, StringFormat='{0}: '}" Padding="0,0,5,0" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout
+                            VerticalOptions="StartAndExpand"
+                            Padding="43,0,0,0"
+                            >
+                                <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Street}" Padding="0,0,5,0" />
+                                <Label FontSize="Subtitle" TextColor="Black" Text="{Binding Restaurant.Adress.Numeration}"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+                        <Label 
+                         VerticalOptions="CenterAndExpand" 
+                         HorizontalOptions="CenterAndExpand"
+                         Padding="0,7,0,0"
+                         TextColor="Black">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="Información de la Reserva: " FontSize="Medium" TextColor="Black" TextDecorations="Underline"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
+                        <VerticalStackLayout  Padding="10">
+
+                            <Label 
+                            Text="Dia para la reserva: "
+                            FontAttributes="Bold"
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Center"
+                            TextColor="Black"/>
+
+
+                            <DatePicker MinimumDate="{Binding MinDate}"
+                             Date="{Binding SelectedDate}" 
+                             FontSize="18"
+                             TextColor="Black"
+                             VerticalOptions="Center" 
+                             HorizontalOptions="Center"
+                             WidthRequest="150"
+                             HeightRequest="50"
+                             IsEnabled="False"/>
+
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Padding="5" >
+                            <Label 
+                            Text="Hora para la reserva: "
+                            FontAttributes="Bold"
+                            TextColor="Black"
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Center" />
+
+                            <TimePicker 
+                             Time="{Binding SelectedTime}" 
+                             VerticalOptions="Center" 
+                             HorizontalOptions="Center"
+                             Format="HH:mm"
+                             FontSize="18"
+                             TextColor="Black"
+                             WidthRequest="150"
+                             HeightRequest="50"
+                             IsEnabled="False"/>
+
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout VerticalOptions="Center"  HorizontalOptions="Center">
+
+                            <Label 
+                            FontSize="Small"
+                            TextColor="Black"
+                            Text="Cantidad de personas: "
+                            Padding="0,0,0,4"
+                            />
+                            <!--<Label 
+                        FontSize="Small"
+                        TextColor="White"
+                        Text="{Binding Reserve.AmountPeople}"
+                        />-->
+                            <Picker
+                         Title="Seleccione la cantidad:" 
+                         TitleColor="Black"
+                         BackgroundColor="White"
+                         SelectedItem="{Binding Reserve.AmountPeople}"
+                         VerticalOptions="Center" 
+                         HorizontalOptions="Center"
+                         HorizontalTextAlignment="Center"
+                         WidthRequest="200"
+                         HeightRequest="40"
+                         IsEnabled="False"      >
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:Int32}">
+                                        <x:Int32>1</x:Int32>
+                                        <x:Int32>2</x:Int32>
+                                        <x:Int32>3</x:Int32>
+                                        <x:Int32>4</x:Int32>
+                                        <x:Int32>5</x:Int32>
+                                        <x:Int32>6</x:Int32>
+                                        <x:Int32>7</x:Int32>
+                                        <x:Int32>8</x:Int32>
+                                        <x:Int32>9</x:Int32>
+                                        <x:Int32>10</x:Int32>
+                                        <x:Int32>+10</x:Int32>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout VerticalOptions="Center"  HorizontalOptions="Center">
+                            <Label  VerticalOptions="Center"  HorizontalOptions="Center" FontSize="Small" Text="Reserva Activa" TextColor="Black"/>
+                            <CheckBox VerticalOptions="Center"  HorizontalOptions="Center" IsChecked="{Binding Reserve.Active}" Color="Teal"  IsEnabled="False"/>
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout VerticalOptions="Center"  HorizontalOptions="Center">
+                            <Label 
+                         FontSize="Small"
+                         TextColor="Black"
+                         Text="Comentarios sobre la Reserva: "
+                         Padding="0,0,0,4"
+                         />
+                            <Editor 
+                            FontSize="Small"
+                            Text="{Binding Reserve.DescriptionStateUser}"
+                            HeightRequest="40" 
+                            BackgroundColor="WhiteSmoke"
+                            PlaceholderColor="Black"         
+                            IsEnabled="False"
+                        />
+                        </VerticalStackLayout>
+
+                        <HorizontalStackLayout VerticalOptions="Center"  HorizontalOptions="Center" >
+                            <Label  VerticalOptions="Center" HorizontalOptions="Center" FontSize="Small" Text="Aprobada por el Restaurant" TextColor="Black"/>
+                            <CheckBox VerticalOptions="Center" HorizontalOptions="Center" IsChecked="{Binding Reserve.StateClient}" Color="Teal" IsEnabled="False"/>
+                        </HorizontalStackLayout>
+
+                        <VerticalStackLayout VerticalOptions="Center"  HorizontalOptions="Center">
+                            <Label 
+                          FontSize="Small"
+                          TextColor="Black"
+                          Text="Comentarios sobre la Reserva del Restaurant: "
+                          Padding="0,0,0,4"
+                          />
+                            <Editor 
+                             FontSize="Small"
+                             Text="{Binding Reserve.DescriptionStateClient}"
+                             HeightRequest="40" 
+                             BackgroundColor="WhiteSmoke"
+                             PlaceholderColor="Black"
+                             IsEnabled="False"
+                             TextColor="Black"    
+                         />
+                        </VerticalStackLayout>
+
+                    </VerticalStackLayout>
+
+                    <!-- Botón para mostrar/ocultar el ScrollView -->
+                    <HorizontalStackLayout Grid.Row="4"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"                        
+                    >
+
+                        <ImageButton 
+                         Source="bottom_arrow_icon"
+                         CornerRadius="10"
+                         BackgroundColor="White"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Padding="5"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"
+         
+                         IsVisible="{Binding IsVisible}"
+                        />
+
+                        <Border                    
+                        Padding="15"
+                        BackgroundColor="WhiteSmoke"
+                        StrokeThickness="3"
+                        WidthRequest="300"
+                        HeightRequest="55"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        >
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20,20,20,20"  />
+                            </Border.StrokeShape>
+
+                            <Border.Stroke>
+                                <LinearGradientBrush EndPoint="0,1">
+                                    <GradientStop Color="Teal"
+                             Offset="0.1" />
+                                    <GradientStop Color="Teal"
+                             Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Stroke>
+
+                            <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                                VerticalOptions="Center">
+                                <Image Source="menu" HeightRequest="25" WidthRequest="25" />
+                                <Label Padding="5,0,0,0"
+                             Text="Mostrar/Ocultar Menu"
+                             FontSize="Subtitle"
+                             />
+                            </HorizontalStackLayout>
+
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ChangeIsVisibleCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <ImageButton 
+                         Source="bottom_arrow_icon"
+                         CornerRadius="10"
+                         BackgroundColor="White"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Padding="5"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center"             
+                         IsVisible="{Binding IsVisible}"
+                        />
+
+
+                    </HorizontalStackLayout>
+
+                    <ScrollView Grid.Row="5" 
+                     AbsoluteLayout.LayoutBounds="0,0,1,1"
+                     AbsoluteLayout.LayoutFlags="All"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand"
+                     Margin="20,10,20,0" 
+                     IsVisible="{Binding IsVisible}"
+                     x:Name="MenuScrollView"
+                     >
+
+                        <VerticalStackLayout >
+                            <!--<HorizontalStackLayout Spacing="7" Margin="10" VerticalOptions="CenterAndExpand" HorizontalOptions="StartAndExpand">
+                            <Image Source="menu" HeightRequest="30" WidthRequest="30"  />
+                            <Label VerticalOptions="Center" FontSize="Medium" Text="Menu" TextColor="White"/>
+                        </HorizontalStackLayout>-->
+
+                            <Border  
+                             Padding="4,4"
+                             HorizontalOptions="Center"
+                             BackgroundColor="Teal"
+                             >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10,10,10,10"  />
+                                </Border.StrokeShape>
+
+                                <CollectionView
+                                 HeightRequest="400"
+                                 ItemsSource="{Binding DishesList}"
+                                 BackgroundColor="WhiteSmoke"
+                                 IsGrouped="True"
+                                 >
+                                    <CollectionView.GroupHeaderTemplate>
+
+                                        <DataTemplate x:DataType="model:MenuCategoriesDishes">
+
+                                            <Border  
+                                         Padding="70,3"
+                                         HorizontalOptions="Center"
+                                         BackgroundColor="NavajoWhite"
+                                         StrokeThickness="3"
+                                         >
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="25,25,25,25"  />
+                                                </Border.StrokeShape>
+
+                                                <Border.Stroke>
+                                                    <LinearGradientBrush EndPoint="0,1">
+                                                        <GradientStop Color="Teal"
+                                                    Offset="0.1" />
+                                                        <GradientStop Color="Teal"
+                                                     Offset="1.0" />
+                                                    </LinearGradientBrush>
+                                                </Border.Stroke>
+
+                                                <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
+
+                                            </Border>
+
+                                        </DataTemplate>
+
+                                    </CollectionView.GroupHeaderTemplate>
+
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout ItemSpacing="10"  Orientation="Vertical"/>
+                                    </CollectionView.ItemsLayout>
+
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="model:DishesResponse">
+
+                                            <VerticalStackLayout Margin="5" HeightRequest="110">
+
+                                                <HorizontalStackLayout >
+                                                    <VerticalStackLayout>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Name}" FontAttributes="Bold" TextDecorations="Underline" Padding="0,0,0,1"/>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Description}" />
+                                                    </VerticalStackLayout>
+                                                </HorizontalStackLayout>
+
+                                                <HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout >
+                                                        <Label  VerticalOptions="Center" FontSize="Small" Text="Celiaco" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Celiac}" IsEnabled="False"/>
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout>
+                                                        <Label VerticalOptions="Center" FontSize="Small" Text="Vegano" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegan}" IsEnabled="False"/>
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout>
+                                                        <Label VerticalOptions="Center" FontSize="Small" Text="Vegetariano" />
+                                                        <CheckBox VerticalOptions="Center" IsChecked="{Binding Vegetarian}" IsEnabled="False"/>
+                                                    </HorizontalStackLayout>
+
+                                                </HorizontalStackLayout>
+
+                                                <HorizontalStackLayout >
+                                                    <HorizontalStackLayout>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="$" FontAttributes="Bold"/>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Price}" />
+                                                    </HorizontalStackLayout>
+                                                </HorizontalStackLayout>
+                                            </VerticalStackLayout>
+
+
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+
+                                </CollectionView>
+
+                            </Border>
+
+                            <Border  
+                             Padding="4,4"
+                             HorizontalOptions="Center"
+                             BackgroundColor="Teal"
+                             >
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10,10,10,10"  />
+                                </Border.StrokeShape>
+
+                                <CollectionView
+                                 HeightRequest="400"
+                                 ItemsSource="{Binding DrinksList}"
+                                 BackgroundColor="WhiteSmoke"
+                                 IsGrouped="True"
+                                 >
+                                    <CollectionView.GroupHeaderTemplate>
+
+                                        <DataTemplate x:DataType="model:MenuCategoriesDrinks">
+
+                                            <Border  
+                                         Padding="70,3"
+                                         HorizontalOptions="Center"
+                                         BackgroundColor="NavajoWhite"
+                                         StrokeThickness="3"
+                                         >
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="25,25,25,25"  />
+                                                </Border.StrokeShape>
+
+                                                <Border.Stroke>
+                                                    <LinearGradientBrush EndPoint="0,1">
+                                                        <GradientStop Color="Teal"
+                                                    Offset="0.1" />
+                                                        <GradientStop Color="Teal"
+                                                    Offset="1.0" />
+                                                    </LinearGradientBrush>
+                                                </Border.Stroke>
+
+                                                <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
+
+                                            </Border>
+
+                                        </DataTemplate>
+
+                                    </CollectionView.GroupHeaderTemplate>
+
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout ItemSpacing="10"  Orientation="Vertical"/>
+                                    </CollectionView.ItemsLayout>
+
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate x:DataType="model:DrinksResponse">
+
+                                            <VerticalStackLayout Margin="5" HeightRequest="70">
+
+                                                <HorizontalStackLayout >
+                                                    <VerticalStackLayout>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Name}" FontAttributes="Bold" TextDecorations="Underline"/>
+                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Description}" />
+
+                                                        <HorizontalStackLayout>
+                                                            <Label  HorizontalOptions="Start" FontSize="Small" Text="$" FontAttributes="Bold"/>
+                                                            <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Price}" />
+                                                        </HorizontalStackLayout>
+
+                                                    </VerticalStackLayout>
+                                                </HorizontalStackLayout>
+
+                                            </VerticalStackLayout>
+
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+
+                                </CollectionView>
+
+                            </Border>
+
+
+                        </VerticalStackLayout>
+
+                    </ScrollView>
+
+                </Grid>
+
+            </ScrollView>
+
+            <AbsoluteLayout
+            AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            IsVisible="True">
+                <ActivityIndicator Color="Teal"
+                   AbsoluteLayout.LayoutBounds="0.5,0.5,0.1,0.1"
+                   AbsoluteLayout.LayoutFlags="All"
+                   IsVisible="True"
+                   IsRunning="{Binding IsActivity}"/>
+            </AbsoluteLayout>
+
+        </AbsoluteLayout>
+    </RefreshView>
+
+</ContentPage>

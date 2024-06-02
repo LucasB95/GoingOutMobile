@@ -4,7 +4,6 @@ using GoingOutMobile.Models.Restaurant;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
 using GoingOutMobile.Views;
-using MercadoPago.Resource.User;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace GoingOutMobile.ViewModels
 {
-    public partial class ReserveListViewModel : ViewModelGlobal
+    public partial class FavoritesViewModel : ViewModelGlobal
     {
         [ObservableProperty]
-        Booking reserveSelected;
+        RestaurantResponse restaurantSelected;
 
         [ObservableProperty]
-        ObservableCollection<Booking> reserveCollection;
+        ObservableCollection<RestaurantResponse> reserveCollection;
 
         [ObservableProperty]
         private bool isActivity = false;
@@ -34,7 +33,7 @@ namespace GoingOutMobile.ViewModels
         private readonly IGenericQueriesServices _genericQueriesServices;
         private readonly IRestaurantService _restaurantService;
 
-        public ReserveListViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices, IRestaurantService restaurantService)
+        public FavoritesViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices, IRestaurantService restaurantService)
         {
             _navegacionService = navegacionService;
             _genericQueriesServices = genericQueriesServices;
@@ -47,9 +46,9 @@ namespace GoingOutMobile.ViewModels
 
         private async void ReserveListViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ReserveSelected))
+            if (e.PropertyName == nameof(RestaurantSelected))
             {
-                var uri = $"{nameof(ReserveDetailPage)}?id={ReserveSelected.ClientsId}&idBooking={ReserveSelected.Id}";
+                var uri = $"{nameof(RestaurantDetailPage)}?id={RestaurantSelected.IdClient}&page={nameof(FavoritesPage)}";
                 await _navegacionService.GoToAsync(uri);
             }
         }
@@ -63,22 +62,12 @@ namespace GoingOutMobile.ViewModels
             {
                 IsBusy = true;
                 var UserId = Preferences.Get("IdUser", string.Empty);
-                var listBooking = await _restaurantService.GetBookings(UserId);
-                if (listBooking != null)
-                {
-                    var reserveList = listBooking.Where(x => x.Date > DateTime.Now).ToList();
-                    if (reserveList != null && reserveList.Count > 0)
-                    {
-                        ReserveCollection = new ObservableCollection<Booking>(reserveList);
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Mensaje", "No posee Reservas activas", "Aceptar");
-                    }
-                }
+                var listBooking = await _restaurantService.GetFavorites(UserId);
+
+                if (listBooking != null && listBooking.Count > 0) { ReserveCollection = new ObservableCollection<RestaurantResponse>(listBooking); }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la lista de reservas o no posee ninguna", "Aceptar");
+                    await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la lista de favoritos o no posee ninguno", "Aceptar");
                 }
             }
             catch (Exception e)

@@ -2,7 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GoingOutMobile.Views.SettingsPage"
-             Title="Configuracion de App">
+             xmlns:vm="clr-namespace:GoingOutMobile.ViewModels"
+             x:DataType="vm:SettingsViewModel"
+             Title="Configuracion de App"
+             BackgroundColor="{StaticResource Primary}">
 
 
     <VerticalStackLayout Margin="20" Spacing="20">
@@ -21,33 +24,176 @@
 
         <HorizontalStackLayout Spacing="20">
             <Image Source="email" HeightRequest="30" WidthRequest="30"  />
-            <VerticalStackLayout>
+
+            <Border Padding="10"     
+             BackgroundColor="WhiteSmoke"
+             StrokeThickness="3"
+             WidthRequest="300"
+             HeightRequest="55"
+             HorizontalOptions="CenterAndExpand"
+             VerticalOptions="CenterAndExpand"
+             >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20"  />
+                </Border.StrokeShape>
+
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="Teal"
+                        Offset="0.1" />
+                        <GradientStop Color="Teal"
+                        Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+
+                <Label Padding="0,0,0,0"
+                Text="{Binding Correoelectronico}"
+                FontSize="Subtitle"
+                FontAttributes="Bold"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+             />
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ContactSupportCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+
+            <!--<VerticalStackLayout>
                 <Label  Text="Correo eléctronico" FontSize="Medium" HorizontalOptions="Start" FontAttributes="Bold"/>
 
-                <Label  Text="{Binding Email}" FontSize="Medium" HorizontalOptions="Start"/>
-            </VerticalStackLayout>
+                <Label  Text="{Binding Correoelectronico}" FontSize="Medium" HorizontalOptions="Start"/>
+            </VerticalStackLayout>-->
         </HorizontalStackLayout>
 
-        <HorizontalStackLayout Spacing="20">
+        <HorizontalStackLayout Spacing="20" >
             <Image Source="password" HeightRequest="30" WidthRequest="30"  />
             <VerticalStackLayout>
-                <Label  Text="Cambiar Contraseña" FontSize="Medium" HorizontalOptions="Start" FontAttributes="Bold"/>
+                <!--<Button  Text="Cambiar Contraseña" FontSize="Medium" HorizontalOptions="Start" FontAttributes="Bold" Command="{Binding ChangePassCommand}"/>-->
 
-                <Label  Text="***********************" FontSize="Medium" HorizontalOptions="Start"/>
+                <!--<Label  Text="***********************" FontSize="Medium" HorizontalOptions="Start"/>-->
+                <Border Padding="10"     
+                        BackgroundColor="WhiteSmoke"
+                        StrokeThickness="3"
+                        WidthRequest="300"
+                        HeightRequest="55"
+                        HorizontalOptions="CenterAndExpand"
+                        VerticalOptions="CenterAndExpand"
+                        >
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20,20,20,20"  />
+                    </Border.StrokeShape>
+
+                    <Border.Stroke>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="Teal"
+                                 Offset="0.1" />
+                            <GradientStop Color="Teal"
+                                 Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Stroke>
+
+                    <Label Padding="0,0,0,0"
+                           Text="Cambiar Contraseña"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                    />
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ChangePassCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
             </VerticalStackLayout>
         </HorizontalStackLayout>
 
         <HorizontalStackLayout Spacing="20">
             <Image Source="faq_icon" HeightRequest="30" WidthRequest="30"  />
-            <Label VerticalOptions="Center" FontSize="Medium" Text="Ayuda y Soporte" />
+            <!--<Label VerticalOptions="Center" FontSize="Medium" Text="Ayuda y Soporte" />-->
+
+            <Border Padding="10"     
+            BackgroundColor="WhiteSmoke"
+            StrokeThickness="3"
+            WidthRequest="300"
+            HeightRequest="55"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand"
+            >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20"  />
+                </Border.StrokeShape>
+
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="Teal"
+                 Offset="0.1" />
+                        <GradientStop Color="Teal"
+                 Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+
+                <Label Padding="0,0,0,0"
+                   Text="Ayuda y Soporte"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="CenterAndExpand"
+                />
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ContactSupportCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+
         </HorizontalStackLayout>
 
         <HorizontalStackLayout Spacing="20">
             <Image Source="signoff" HeightRequest="30" WidthRequest="30"  />
-            <Label VerticalOptions="Center" FontSize="Medium" Text="Cerrar sesión" />
-            <HorizontalStackLayout.GestureRecognizers>
+            <!--<Label VerticalOptions="Center" FontSize="Medium" Text="Cerrar sesión" />-->
+            <!--<HorizontalStackLayout.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding SalirSesionCommand}" />
-            </HorizontalStackLayout.GestureRecognizers>
+            </HorizontalStackLayout.GestureRecognizers>-->
+
+
+            <Border Padding="10"     
+            BackgroundColor="WhiteSmoke"
+            StrokeThickness="3"
+            WidthRequest="300"
+            HeightRequest="55"
+            HorizontalOptions="CenterAndExpand"
+            VerticalOptions="CenterAndExpand"
+            >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20"  />
+                </Border.StrokeShape>
+
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="Teal"
+                 Offset="0.1" />
+                        <GradientStop Color="Teal"
+                 Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
+
+                <Label Padding="0,0,0,0"
+                   Text="Cerrar sesión"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="CenterAndExpand"
+                />
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SalirSesionCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+
         </HorizontalStackLayout>
 
 

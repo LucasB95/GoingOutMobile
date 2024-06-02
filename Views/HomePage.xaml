@@ -137,7 +137,7 @@
 
                     <VerticalStackLayout Grid.Row="3" Spacing="20">
                         <Label 
-                        Text="Mis Restaurant Favoritos"
+                        Text="Tus Favoritos"
                         FontSize="Large"
                         />    
                         

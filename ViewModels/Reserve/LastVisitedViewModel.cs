@@ -3,8 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Restaurant;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
-using GoingOutMobile.Views;
-using MercadoPago.Resource.User;
+using GoingOutMobile.Views.LastVisited;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,9 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GoingOutMobile.ViewModels
+namespace GoingOutMobile.ViewModels.Reserve
 {
-    public partial class ReserveListViewModel : ViewModelGlobal
+    public partial class LastVisitedViewModel : ViewModelGlobal
     {
         [ObservableProperty]
         Booking reserveSelected;
@@ -34,7 +33,7 @@ namespace GoingOutMobile.ViewModels
         private readonly IGenericQueriesServices _genericQueriesServices;
         private readonly IRestaurantService _restaurantService;
 
-        public ReserveListViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices, IRestaurantService restaurantService)
+        public LastVisitedViewModel(INavegacionService navegacionService, IGenericQueriesServices genericQueriesServices, IRestaurantService restaurantService)
         {
             _navegacionService = navegacionService;
             _genericQueriesServices = genericQueriesServices;
@@ -49,7 +48,7 @@ namespace GoingOutMobile.ViewModels
         {
             if (e.PropertyName == nameof(ReserveSelected))
             {
-                var uri = $"{nameof(ReserveDetailPage)}?id={ReserveSelected.ClientsId}&idBooking={ReserveSelected.Id}";
+                var uri = $"{nameof(LastVisitedDetailPage)}?id={ReserveSelected.ClientsId}&idBooking={ReserveSelected.Id}";
                 await _navegacionService.GoToAsync(uri);
             }
         }
@@ -66,14 +65,14 @@ namespace GoingOutMobile.ViewModels
                 var listBooking = await _restaurantService.GetBookings(UserId);
                 if (listBooking != null)
                 {
-                    var reserveList = listBooking.Where(x => x.Date > DateTime.Now).ToList();
-                    if (reserveList != null && reserveList.Count > 0)
+                    var lastVisited = listBooking.Where(x => x.Date < DateTime.Now).ToList();
+                    if (lastVisited == null || lastVisited.Count == 0)
                     {
-                        ReserveCollection = new ObservableCollection<Booking>(reserveList);
+                        await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la lista de reservas o no posee ninguna", "Aceptar");
                     }
                     else
                     {
-                        await Shell.Current.DisplayAlert("Mensaje", "No posee Reservas activas", "Aceptar");
+                        ReserveCollection = new ObservableCollection<Booking>(lastVisited);
                     }
                 }
                 else

@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Reflection;
 using GoingOutMobile.Services.Interfaces;
+using GoingOutMobile.Views.LastVisited;
+using GoingOutMobile.ViewModels.Reserve;
+using GoingOutMobile.Views.Security;
+using GoingOutMobile.ViewModels.Security;
 
 namespace GoingOutMobile;
 
@@ -56,6 +60,9 @@ public static class MauiProgram
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<SettingsPage>();
 
+        builder.Services.AddTransient<ChangePasswordViewModel>();
+        builder.Services.AddTransient<ChangePasswordPage>();
+
         builder.Services.AddTransient<RestaurantListViewModel>();
         builder.Services.AddTransient<RestaurantListPage>();
 
@@ -74,6 +81,15 @@ public static class MauiProgram
         builder.Services.AddTransient<ReserveDetailViewModel>();
         builder.Services.AddTransient<ReserveDetailPage>();
 
+        builder.Services.AddTransient<LastVisitedViewModel>();
+        builder.Services.AddTransient<LastVisitedPage>();
+
+        builder.Services.AddTransient<LastVisitedDetailViewModel>();
+        builder.Services.AddTransient<LastVisitedDetailPage>();
+
+        builder.Services.AddTransient<FavoritesViewModel>();
+        builder.Services.AddTransient<FavoritesPage>();
+
         Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
         Routing.RegisterRoute(nameof(LoginGooglePage), typeof(LoginGooglePage));
@@ -86,6 +102,15 @@ public static class MauiProgram
         Routing.RegisterRoute(nameof(ReserveDetailPage), typeof(ReserveDetailPage));
         Routing.RegisterRoute(nameof(ReserveListPage), typeof(ReserveListPage));
         Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
+
+        Routing.RegisterRoute(nameof(LastVisitedDetailPage), typeof(LastVisitedDetailPage));
+        Routing.RegisterRoute(nameof(LastVisitedPage), typeof(LastVisitedPage));
+        Routing.RegisterRoute(nameof(FavoritesPage), typeof(FavoritesPage));
+        
+        
+        Routing.RegisterRoute(nameof(ChangePasswordPage), typeof(ChangePasswordPage));
+
+
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -15,4 +15,11 @@ namespace GoingOutMobile.Models.Login
     {
         public string userId { get; set; }
     }
+    public class ChangePassRequest
+    {
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string PasswordOld { get; set; }
+        public string PasswordNew { get; set; }
+    }
 }

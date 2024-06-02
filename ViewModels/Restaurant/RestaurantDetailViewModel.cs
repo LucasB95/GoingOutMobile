@@ -168,6 +168,10 @@ namespace GoingOutMobile.ViewModels
             {
                 uri = $"/{nameof(RestaurantFindListPage)}";
             }
+            else if (PageReturn.Contains("FavoritesPage"))
+            {
+                uri = $"//{nameof(FavoritesPage)}";
+            }
 
             await _navegacionService.GoToAsync(uri);
         }
