@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GoingOutMobile.Views.CustomAlertPage"
+             BackgroundColor="{StaticResource Primary}"
+             Title="CustomAlertPage">
+
+    <StackLayout Padding="20" VerticalOptions="CenterAndExpand" BackgroundColor="Teal" WidthRequest="350" HeightRequest="250">
+        <Label Text="Ingrese el código recibido al email:" FontSize="Subtitle" FontAttributes="Bold"/>
+        <Entry x:Name="InputEntry" Placeholder="código de recuperación" />
+        <Label x:Name="TimerLabel" Text="10:00" FontSize="Large" HorizontalOptions="Center" />
+        <Label x:Name="ErrorLabel" Text="" TextColor="Red" IsVisible="False" />
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10" Padding="0,20,0,0">
+            <Button Text="Confirmar" Clicked="OnConfirmButtonClicked" />
+            <Button Text="Cancelar" Clicked="OnCancelButtonClicked" />
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

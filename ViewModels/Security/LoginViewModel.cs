@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
 using GoingOutMobile.Views;
+using GoingOutMobile.Views.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,9 +84,17 @@ namespace GoingOutMobile.ViewModels
 
             IsActivity = false;
         }
+
         private bool StatusConnection()
         {
             return _connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
+        }
+        
+        [RelayCommand]
+        private async Task ForgotPassword()
+        {
+            var uri = $"{nameof(RecoverPasswordPage)}";
+            await _navegacionService.GoToAsync(uri);
         }
 
         [RelayCommand]

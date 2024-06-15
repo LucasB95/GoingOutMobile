@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace GoingOutMobile.ViewModels
 {
-    public partial class ReserveDetailViewModel : ViewModelGlobal, IQueryAttributable , INotifyPropertyChanged
+    public partial class ReserveDetailViewModel : ViewModelGlobal, IQueryAttributable, INotifyPropertyChanged
     {
         [ObservableProperty]
         private string imagenSource;
@@ -52,10 +52,16 @@ namespace GoingOutMobile.ViewModels
         public DateTime minDate = DateTime.Now;
 
         [ObservableProperty]
-        public string observation;
+        public string descriptionStateUser;
 
         [ObservableProperty]
+        private bool  isActive;
+        
+        [ObservableProperty]
         private bool isVisible;
+
+        [ObservableProperty]
+        private bool isModify = false;
 
         [ObservableProperty]
         private MenuResponse menu;
@@ -82,6 +88,7 @@ namespace GoingOutMobile.ViewModels
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
+            PropertyChanged += OnPropertyChanged;
 
         }
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -92,7 +99,6 @@ namespace GoingOutMobile.ViewModels
             IsRefreshing = true;
             await RefreshCommand.ExecuteAsync(this);
         }
-
         public async Task LoadDataAsync()
         {
             IsActivity = true;
@@ -107,7 +113,28 @@ namespace GoingOutMobile.ViewModels
                 Reserve = await _restaurantService.GetBookingsRestaurant(UserId, IdBooking);
                 Restaurant = await _restaurantService.DetailsRestaurant(IdClient);
 
-                #region Menu
+                if (Reserve == null || Restaurant == null)
+                {
+                    await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la reserva", "Aceptar");
+                }
+                else
+                {
+                    SelectedDate = Reserve.Date;
+                    SelectedTime = Reserve.Date.TimeOfDay;
+                    CantidadSelected = Reserve.AmountPeople.ToString();
+                    IsActive = Reserve.Active;
+                    DescriptionStateUser = Reserve.DescriptionStateUser;
+
+                    var favorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
+
+                    if (favorites != null || favorites.Count() > 0)
+                    {
+                        Restaurant.IsBookmarkEnabled = favorites.Any(x => x.IdClient == Restaurant.IdClient);
+                    }
+
+                    ImagenSource = Restaurant.IsBookmarkEnabled ? "bookmark_fill_icon" : "bookmark_empty_icon";
+
+                    #region Menu
                 Menu = await _restaurantService.GetClientMenu(IdClient);
 
                 this.Categories = new List<CategoriesRestaurantResponse>(Menu.Categories);
@@ -147,26 +174,9 @@ namespace GoingOutMobile.ViewModels
                 DrinksList.OrderBy(x => x.IdCategory).ToList();
 
                 #endregion
-
-                if (Reserve == null || Restaurant == null)
-                {
-                    await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la reserva", "Aceptar");
                 }
-                else
-                {
-                    SelectedTime = Reserve.Date.TimeOfDay;
-                    SelectedDate = Reserve.Date;
 
-                    var favorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
 
-                    if (favorites != null || favorites.Count() > 0)
-                    {
-                        Restaurant.IsBookmarkEnabled = favorites.Any(x => x.IdClient == Restaurant.IdClient);
-                    }
-
-                    ImagenSource = Restaurant.IsBookmarkEnabled ? "bookmark_fill_icon" : "bookmark_empty_icon";
-
-                }
 
             }
             catch (Exception e)
@@ -176,6 +186,119 @@ namespace GoingOutMobile.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+
+            IsActivity = false;
+        }
+
+
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (IsActivity)
+                return;
+
+
+            if (e.PropertyName == nameof(CantidadSelected)
+                || e.PropertyName == nameof(SelectedDate)
+                || e.PropertyName == nameof(SelectedTime)
+                || e.PropertyName == nameof(DescriptionStateUser)
+                || e.PropertyName == nameof(IsActive))
+            {
+                IsModify = true;
+            }
+        }
+
+        [RelayCommand]
+        async Task ReserveModify()
+        {
+            IsActivity = true;
+            IsModify = false;
+
+            if (String.IsNullOrEmpty(CantidadSelected))
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "Seleccione la cantidad de personas", "Aceptar");
+            }
+            else if (SelectedDate.Date == DateTime.MinValue)
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "Seleccioné el dia para la reserva", "Aceptar");
+            }
+            else if (SelectedTime == TimeSpan.MinValue)
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "Seleccioné el dia para la reserva", "Aceptar");
+            }
+            else if (!String.IsNullOrEmpty(CantidadSelected) && !String.IsNullOrEmpty(SelectedDate.ToString()))
+            {
+
+                DateTime fechaConHora = SelectedDate.Date + SelectedTime;
+
+                if (fechaConHora < DateTime.Now)
+                {
+                    await Shell.Current.DisplayAlert("Mensaje", "Seleccioné correctamente la Hora para la reserva", "Aceptar");
+                }
+                else
+                {
+
+                    BookingResponse bookingResponse = new BookingResponse()
+                    {
+                        Id = Reserve.Id,
+                        AmountPeople = int.Parse(CantidadSelected),
+                        Date = fechaConHora,
+                        Active = IsActive,
+                        UserId = Reserve.UserId,
+                        ClientsId = Reserve.ClientsId,
+                        BusinessName = Reserve.BusinessName,
+                        StateClient = Reserve.StateClient,
+                        DescriptionStateClient = Reserve.DescriptionStateClient,
+                        DescriptionStateUser = !String.IsNullOrEmpty(DescriptionStateUser) ? DescriptionStateUser : ""
+                    };
+
+                    var UserId = Preferences.Get("IdUser", string.Empty);
+                    IEnumerable<Booking> bookings = await _restaurantService.GetBookings(UserId);
+
+                    bool ValidoReserva = false;
+                    if (bookings != null && bookings.Any())
+                    {
+                        ValidoReserva = bookings.Any(x => x.ClientsId == bookingResponse.ClientsId && x.UserId == bookingResponse.UserId && x.Date == bookingResponse.Date
+                                                    && x.AmountPeople == bookingResponse.AmountPeople);
+                    }
+
+                    if (ValidoReserva)
+                    {
+                        await Shell.Current.DisplayAlert("Mensaje", "Ya existe una reserva para ese dia y con esa hora", "Aceptar");
+                    }
+                    else
+                    {
+                        try
+                        {
+
+                            if (await _restaurantService.EditReservation(bookingResponse))
+                            {
+                                //Llevar a la lista de reservas desde el menu costadp
+                                var uri = $"/{nameof(ReserveListPage)}";
+                                await _navegacionService.GoToAsync(uri);
+
+                            }
+                            else
+                            {
+                                await Shell.Current.DisplayAlert("Mensaje", "No se pudo generar la reserva", "Aceptar");
+                            }
+
+
+                        }
+                        catch (Exception e)
+                        {
+                            await Application.Current.MainPage.DisplayAlert("Error", e.Message, "Aceptar");
+                        }
+                    }
+
+                }
+
+                //var resultado = await _mercadoPagoService.preparandoMP();
+                //var uri = new Uri(resultado[1]);
+                //await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+
+                //await Shell.Current.DisplayAlert("Mensaje", "sacar la cantidad desde el picker", "Aceptar");
             }
 
             IsActivity = false;
@@ -257,6 +380,7 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
+        [RelayCommand]
         async Task DeleteFavorite()
         {
             IsActivity = true;

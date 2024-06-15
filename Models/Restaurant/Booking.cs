@@ -39,6 +39,9 @@ namespace GoingOutMobile.Models.Restaurant
 
         [JsonProperty("descriptionStateUser")]
         public string DescriptionStateUser { get; set; } = "";
+
+        [JsonProperty("bookingComplete")]
+        public bool BookingComplete { get; set; }
     }
     public class BookingCreate
     {
@@ -48,6 +51,21 @@ namespace GoingOutMobile.Models.Restaurant
         public string ClientsId { get; set; }
         public string BusinessName { get; set; }
         public string DescriptionStateUser { get; set; } = "";
+    }
+
+    public class BookingResponse
+    {
+        public int Id { get; set; }
+        public int AmountPeople { get; set; }
+        public DateTime Date { get; set; }
+        public bool Active { get; set; }
+        public string UserId { get; set; }
+        public string ClientsId { get; set; }
+        public string BusinessName { get; set; }
+        public bool StateClient { get; set; }
+        public string? DescriptionStateClient { get; set; }
+        public string? DescriptionStateUser { get; set; }
+        public bool BookingComplete { get; set; }
     }
 
     public class BookingConsult

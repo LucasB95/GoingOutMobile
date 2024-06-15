@@ -9,19 +9,11 @@ namespace GoingOutMobile.Models.Login
 {
     public class RecoveryPassword
     {
-        [JsonProperty("id")]
         public Guid Id { get; set; }
-
-        [JsonProperty("dateRecover")]
-        public DateTime DateRecover { get; set; }
-
-        [JsonProperty("codeGenerate")]
+        public DateTime DateChange { get; set; }
+        public string Password { get; set; }
         public int CodeGenerate { get; set; }
-
-        [JsonProperty("name")]
         public string Name { get; set; }
-
-        [JsonProperty("email")]
         public string Email { get; set; }
     }
 }

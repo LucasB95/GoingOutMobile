@@ -15,5 +15,6 @@ namespace GoingOutMobile.Services
         Task<bool> NewReserve(BookingCreate bookingCreate);
         Task<IEnumerable<Booking>> GetBookings(string IdUser);
         Task<Booking> GetBookingsRestaurant(string IdUser, string IdClient);
+        Task<bool> EditReservation(BookingResponse bookingCreate);
     }
 }

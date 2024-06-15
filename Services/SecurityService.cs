@@ -1,5 +1,6 @@
 ﻿using GoingOutMobile.Models.Config;
 using GoingOutMobile.Models.Login;
+using GoingOutMobile.Views;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -176,24 +177,15 @@ namespace GoingOutMobile.Services
 
 
         }
-
         public async Task<string> ChangePassword(ChangePassRequest changePass)
         {
             client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
             client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
 
             var url = $"{settings.UrlBase}/Authentication/ChangePassword";
 
-            var changePassRequest = new ChangePassRequest
-            {
-                UserName = changePass.UserName,
-                Email = changePass.Email,
-                PasswordOld = changePass.PasswordOld,
-                PasswordNew = changePass.PasswordNew
-            };
-
-            var json = JsonConvert.SerializeObject(changePassRequest);
+            var json = JsonConvert.SerializeObject(changePass);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync(url, content);
@@ -214,8 +206,76 @@ namespace GoingOutMobile.Services
 
 
         }
+        public async Task<RecoverPasswordResponse> RecoverPassword(RecoverPassword recoverPassword)
+        {
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+
+            var url = $"{settings.UrlBase}/Authentication/RecoverPassword";
+
+            var recoverPasswordReq = new RecoverPassword
+            {
+                UserName = recoverPassword.UserName,
+                Email = recoverPassword.Email
+            };
+
+            var json = JsonConvert.SerializeObject(recoverPasswordReq);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new RecoverPasswordResponse();
+            }
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<RecoverPasswordResponse>(jsonResult);
+
+        }
+        public async Task<bool> RecoveryPassword(RecoveryPassword recoveryPassword)
+        {
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+
+            var url = $"{settings.UrlBase}/Authentication/RecoveryPassword";
+
+            var json = JsonConvert.SerializeObject(recoveryPassword);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            return true;
+
+        }
     }
 
+    public static class CustomAlertService
+    {
+        public static async Task<string> ShowCustomAlertAsync()
+        {
+            var tcs = new TaskCompletionSource<string>();
+            var page = new CustomAlertPage(tcs);
+            await Shell.Current.Navigation.PushModalAsync(page);
+            return await tcs.Task;
+        }
+    }
 
     internal class LoginGoogle
     {

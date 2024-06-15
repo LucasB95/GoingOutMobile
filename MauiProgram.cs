@@ -9,6 +9,7 @@ using GoingOutMobile.Views.LastVisited;
 using GoingOutMobile.ViewModels.Reserve;
 using GoingOutMobile.Views.Security;
 using GoingOutMobile.ViewModels.Security;
+using CommunityToolkit.Maui;
 
 namespace GoingOutMobile;
 
@@ -37,31 +38,53 @@ public static class MauiProgram
 
 		builder.Services.AddSingleton(Connectivity.Current);
 		builder.Services.AddSingleton<HttpClient>();
-
 		builder.Services.AddSingleton<INavegacionService, NavegacionService>();
 		builder.Services.AddSingleton<IGenericQueriesServices, GenericQueriesServices>();
         builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
-        builder.Services.AddSingleton<IMercadoPagoService, MercadoPagoService>();
-
         builder.Services.AddSingleton<SecurityService>();
 
-		builder.Services.AddTransient<LoginViewModel>();
+        builder.Services.AddTransient <MainPageViewModel>();
+        builder.Services.AddTransient<MainPage>();
+        
+        builder.Services.AddTransient<HomeViewModel>();
+        builder.Services.AddTransient<HomePage>();
+        Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+
+
+        builder.Services.AddSingleton<IMercadoPagoService, MercadoPagoService>();
+        Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
+
+
+        #region Security
+
+        builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<LoginPage>();
 
         builder.Services.AddTransient<CreateUserViewModel>();
         builder.Services.AddTransient<CreateUserPage>();
 
-        builder.Services.AddTransient <MainPageViewModel>();
-        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<ChangePasswordViewModel>();
+        builder.Services.AddTransient<ChangePasswordPage>();
 
-        builder.Services.AddTransient<HomeViewModel>();
-        builder.Services.AddTransient<HomePage>();
+        builder.Services.AddTransient<RecoverPasswordViewModel>();
+        builder.Services.AddTransient<RecoverPasswordPage>(); 
+        
+        builder.Services.AddTransient<RecoveryPasswordViewModel>();
+        builder.Services.AddTransient<RecoveryPasswordPage>();
 
         builder.Services.AddTransient<SettingsViewModel>();
         builder.Services.AddTransient<SettingsPage>();
 
-        builder.Services.AddTransient<ChangePasswordViewModel>();
-        builder.Services.AddTransient<ChangePasswordPage>();
+        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(LoginGooglePage), typeof(LoginGooglePage));
+        Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
+        Routing.RegisterRoute(nameof(ChangePasswordPage), typeof(ChangePasswordPage));
+        Routing.RegisterRoute(nameof(RecoverPasswordPage), typeof(RecoverPasswordPage));
+        Routing.RegisterRoute(nameof(RecoveryPasswordPage), typeof(RecoveryPasswordPage));
+
+        #endregion
+
+        #region Restaurant
 
         builder.Services.AddTransient<RestaurantListViewModel>();
         builder.Services.AddTransient<RestaurantListPage>();
@@ -69,17 +92,33 @@ public static class MauiProgram
         builder.Services.AddTransient<RestaurantDetailViewModel>();
         builder.Services.AddTransient<RestaurantDetailPage>();
 
-        builder.Services.AddTransient<BookingsViewModel>();
-        builder.Services.AddTransient<BookingsPage>();
-
         builder.Services.AddTransient<RestaurantFindListViewModel>();
         builder.Services.AddTransient<RestaurantFindListPage>();
+
+        Routing.RegisterRoute(nameof(RestaurantListPage), typeof(RestaurantListPage));
+        Routing.RegisterRoute(nameof(RestaurantDetailPage), typeof(RestaurantDetailPage));
+        Routing.RegisterRoute(nameof(RestaurantFindListPage), typeof(RestaurantFindListPage));
+
+        #endregion
+
+        #region Reserve
+
+        builder.Services.AddTransient<BookingsViewModel>();
+        builder.Services.AddTransient<BookingsPage>();
 
         builder.Services.AddTransient<ReserveListViewModel>();
         builder.Services.AddTransient<ReserveListPage>();
 
         builder.Services.AddTransient<ReserveDetailViewModel>();
         builder.Services.AddTransient<ReserveDetailPage>();
+
+        Routing.RegisterRoute(nameof(ReserveDetailPage), typeof(ReserveDetailPage));
+        Routing.RegisterRoute(nameof(ReserveListPage), typeof(ReserveListPage));
+        Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
+
+        #endregion
+
+        #region Varios
 
         builder.Services.AddTransient<LastVisitedViewModel>();
         builder.Services.AddTransient<LastVisitedPage>();
@@ -88,27 +127,13 @@ public static class MauiProgram
         builder.Services.AddTransient<LastVisitedDetailPage>();
 
         builder.Services.AddTransient<FavoritesViewModel>();
-        builder.Services.AddTransient<FavoritesPage>();
-
-        Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
-        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-        Routing.RegisterRoute(nameof(LoginGooglePage), typeof(LoginGooglePage));
-        Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
-        Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
-
-        Routing.RegisterRoute(nameof(RestaurantListPage), typeof(RestaurantListPage));
-        Routing.RegisterRoute(nameof(RestaurantDetailPage), typeof(RestaurantDetailPage));
-        Routing.RegisterRoute(nameof(RestaurantFindListPage), typeof(RestaurantFindListPage));
-        Routing.RegisterRoute(nameof(ReserveDetailPage), typeof(ReserveDetailPage));
-        Routing.RegisterRoute(nameof(ReserveListPage), typeof(ReserveListPage));
-        Routing.RegisterRoute(nameof(BookingsPage), typeof(BookingsPage));
+        builder.Services.AddTransient<FavoritesPage>();      
 
         Routing.RegisterRoute(nameof(LastVisitedDetailPage), typeof(LastVisitedDetailPage));
         Routing.RegisterRoute(nameof(LastVisitedPage), typeof(LastVisitedPage));
         Routing.RegisterRoute(nameof(FavoritesPage), typeof(FavoritesPage));
-        
-        
-        Routing.RegisterRoute(nameof(ChangePasswordPage), typeof(ChangePasswordPage));
+
+        #endregion
 
 
 

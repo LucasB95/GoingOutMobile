@@ -294,6 +294,37 @@ namespace GoingOutMobile.Services
 
             return true;
         }
+        
+        public async Task<bool> EditReservation(BookingResponse bookingCreate)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
+
+            var url = $"{settings.UrlBase}/Bookings/EditReservation";
+
+            var json = JsonConvert.SerializeObject(bookingCreate);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return false;
+            }
+
+            return true;
+        }
         public async Task<IEnumerable<Booking>> GetBookings(string IdUser)
         {
             await ValidaToken();

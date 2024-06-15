@@ -30,6 +30,9 @@ namespace GoingOutMobile.ViewModels.Security
 
         [ObservableProperty]
         private string iconSeePass = "eyeclose.svg";
+        
+        [ObservableProperty]
+        private string iconSeePassConfirmation = "eyeclose.svg";
 
         [ObservableProperty]
         private string name;
@@ -61,9 +64,9 @@ namespace GoingOutMobile.ViewModels.Security
             IsActivity = true;
 
 
-            if (String.IsNullOrEmpty(Email))
+            if (String.IsNullOrEmpty(Email) && Email != Preferences.Get("Email", string.Empty))
             {
-                await Shell.Current.DisplayAlert("Mensaje", "No ingreso un mail valido", "Aceptar");
+                await Shell.Current.DisplayAlert("Mensaje", "No ingreso un email valido o no corresponde al del usuario logeado", "Aceptar");
             }
             else if (String.IsNullOrEmpty(Password))
             {
@@ -96,7 +99,7 @@ namespace GoingOutMobile.ViewModels.Security
                         Preferences.Set("Email", Persona.Email);
                         Preferences.Set("UserId", Persona.UserId);
 
-                        Application.Current.MainPage = new AppShell();
+                        await Shell.Current.DisplayAlert("Mensaje", "Contraseña modificada correctamente", "Aceptar");
                     }
                 }
                 else
@@ -130,12 +133,12 @@ namespace GoingOutMobile.ViewModels.Security
             if (IsPasswordConfirmation)
             {
                 IsPasswordConfirmation = false;
-                IconSeePass = "eyeopen.svg";
+                IconSeePassConfirmation = "eyeopen.svg";
             }
             else
             {
                 IsPasswordConfirmation = true;
-                IconSeePass = "eyeclose.svg";
+                IconSeePassConfirmation = "eyeclose.svg";
             }
         }
 
