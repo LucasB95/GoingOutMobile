@@ -28,7 +28,13 @@ namespace GoingOutMobile.ViewModels
         ObservableCollection<RestaurantResponse> favorites;
 
         [ObservableProperty]
-        bool isRefreshing;
+        ObservableCollection<Booking> reserveCollection;
+
+        [ObservableProperty]
+        bool isRefreshing;  
+        
+        [ObservableProperty]
+        bool mostrarMGS;
 
         [ObservableProperty]
         RestaurantResponse restaurantSelected;
@@ -68,12 +74,29 @@ namespace GoingOutMobile.ViewModels
             {
                 IsBusy = true;
                 var listCategories = await _restaurantService.GetCategories();
-                //var listClientes = await _genericQueriesServices.GetInmueblesFavoritos();
-
-                //FavoriteInmuebles = new ObservableCollection<InmuebleResponse>(listInmuebles);
                 CategoriesMobiles = new ObservableCollection<CategoriesMobileResponse>(listCategories);
                 var listFavorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
                 Favorites = new ObservableCollection<RestaurantResponse>(listFavorites);
+
+                var UserId = Preferences.Get("IdUser", string.Empty);
+                var listBooking = await _restaurantService.GetBookings(UserId);
+                if (listBooking != null)
+                {
+                    MostrarMGS = listBooking.Any(x => x.BookingComplete == false);
+
+                    if (MostrarMGS && !ReservasMSG)
+                    {
+                        ReservasMSG = true;
+                        bool usuarioAcepto = await Shell.Current.DisplayAlert("Reservas", "Revise el estado de sus reservas. ¿Quiere verlas?", "Sí", "No");
+
+                        if (usuarioAcepto)
+                        {
+                            var uri = $"{nameof(ReserveListPage)}?page=HomePage";
+                            await _navegacionService.GoToAsync(uri);
+                        }
+                    }
+
+                }
 
             }
             catch (Exception e)
@@ -100,6 +123,13 @@ namespace GoingOutMobile.ViewModels
         async Task CategoryEventSelected()
         {
             var uri = $"{nameof(RestaurantListPage)}?nameCategory={CategoriesMobileSelected.Name}";
+            await _navegacionService.GoToAsync(uri);
+        }  
+        
+        [RelayCommand]
+        async Task VerificarReservas()
+        {
+            var uri = $"{nameof(ReserveListPage)}?page=HomePage";
             await _navegacionService.GoToAsync(uri);
         }
 

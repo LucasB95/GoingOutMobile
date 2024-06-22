@@ -53,7 +53,7 @@ namespace GoingOutMobile.ViewModels
         {
             NameCategory = query["nameCategory"].ToString();
             Preferences.Set("nameCategory", NameCategory);
-            await LoadDataAsync(nameCategory);
+            await LoadDataAsync(NameCategory);
 
         }
 

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GoingOutMobile.ViewModels
 {
-    public partial class FavoritesViewModel : ViewModelGlobal
+    public partial class FavoritesViewModel : ViewModelGlobal, IQueryAttributable
     {
         [ObservableProperty]
         RestaurantResponse restaurantSelected;
@@ -53,6 +53,16 @@ namespace GoingOutMobile.ViewModels
             }
         }
 
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            var page = query["page"].ToString();
+
+            if (!String.IsNullOrEmpty(page))
+            {
+                IsRefreshing = true;
+                await RefreshCommand.ExecuteAsync(this);
+            }
+        }
         public async Task LoadDataAsync()
         {
             if (IsBusy)

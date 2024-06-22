@@ -74,11 +74,13 @@ namespace GoingOutMobile.ViewModels.Security
                 Preferences.Set("CodeGenerate", resultado.CodeGenerate);
                 Preferences.Set("IdRecoverPass", resultado.Id.ToString());
                 Preferences.Set("RecoverPassDateTime", resultado.DateRecover.ToString());
+                Preferences.Set("userName", resultado.UserName);
+                Preferences.Set("Email", resultado.Email);
 
                 var result = await CustomAlertService.ShowCustomAlertAsync();
                 if (result != null && resultado.CodeGenerate == result)
                 {
-                    var uri = $"{nameof(RecoveryPasswordPage)}";
+                    var uri = $"{nameof(RecoveryPasswordPage)}?id={result}";
                     await _navegacionService.GoToAsync(uri);;
                 }
                 else

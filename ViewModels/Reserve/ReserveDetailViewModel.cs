@@ -55,8 +55,8 @@ namespace GoingOutMobile.ViewModels
         public string descriptionStateUser;
 
         [ObservableProperty]
-        private bool  isActive;
-        
+        private bool isActive;
+
         [ObservableProperty]
         private bool isVisible;
 
@@ -83,13 +83,14 @@ namespace GoingOutMobile.ViewModels
 
         private readonly INavegacionService _navegacionService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IMercadoPagoService _mercadoPagoService;
 
-        public ReserveDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService)
+        public ReserveDetailViewModel(IRestaurantService restaurantService, INavegacionService navegacionService, IMercadoPagoService mercadoPagoService)
         {
             _restaurantService = restaurantService;
             _navegacionService = navegacionService;
+            _mercadoPagoService = mercadoPagoService;
             PropertyChanged += OnPropertyChanged;
-
         }
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -135,45 +136,45 @@ namespace GoingOutMobile.ViewModels
                     ImagenSource = Restaurant.IsBookmarkEnabled ? "bookmark_fill_icon" : "bookmark_empty_icon";
 
                     #region Menu
-                Menu = await _restaurantService.GetClientMenu(IdClient);
+                    Menu = await _restaurantService.GetClientMenu(IdClient);
 
-                this.Categories = new List<CategoriesRestaurantResponse>(Menu.Categories);
-                Dishes = new ObservableCollection<DishesResponse>(Menu.Dishes);
-                Drinks = new ObservableCollection<DrinksResponse>(Menu.Drinks);
+                    this.Categories = new List<CategoriesRestaurantResponse>(Menu.Categories);
+                    Dishes = new ObservableCollection<DishesResponse>(Menu.Dishes);
+                    Drinks = new ObservableCollection<DrinksResponse>(Menu.Drinks);
 
-                var CategoriesId = this.Categories.Select(c => c.Id).ToList();
+                    var CategoriesId = this.Categories.Select(c => c.Id).ToList();
 
-                var DrinksCategoriesId = Drinks.Where(x => CategoriesId.Contains(x.Categories.Id)).Select(x => x.Categories.Id).ToList();
+                    var DrinksCategoriesId = Drinks.Where(x => CategoriesId.Contains(x.Categories.Id)).Select(x => x.Categories.Id).ToList();
 
-                var DishesCategoriesId = Dishes.Where(x => CategoriesId.Contains(x.Categories.Id)).Select(x => x.Categories.Id).ToList();
+                    var DishesCategoriesId = Dishes.Where(x => CategoriesId.Contains(x.Categories.Id)).Select(x => x.Categories.Id).ToList();
 
-                MenuCategoriesDishes postres = null;
+                    MenuCategoriesDishes postres = null;
 
-                foreach (var item in this.Categories)
-                {
-                    if (DishesCategoriesId.Any(x => x == item.Id))
+                    foreach (var item in this.Categories)
                     {
-                        if (item.Name.Contains("Postres"))
+                        if (DishesCategoriesId.Any(x => x == item.Id))
                         {
-                            postres = new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList());
+                            if (item.Name.Contains("Postres"))
+                            {
+                                postres = new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList());
+                            }
+                            else
+                            {
+                                DishesList.Add(new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList()));
+                            }
                         }
-                        else
+                        if (DrinksCategoriesId.Any(x => x == item.Id))
                         {
-                            DishesList.Add(new MenuCategoriesDishes(item.Id, item.Name, Dishes.Where(x => x.Categories.Id == item.Id).ToList()));
+                            DrinksList.Add(new MenuCategoriesDrinks(item.Id, item.Name, Drinks.Where(x => x.Categories.Id == item.Id).ToList()));
                         }
                     }
-                    if (DrinksCategoriesId.Any(x => x == item.Id))
-                    {
-                        DrinksList.Add(new MenuCategoriesDrinks(item.Id, item.Name, Drinks.Where(x => x.Categories.Id == item.Id).ToList()));
-                    }
-                }
 
-                if (postres != null) { DishesList.Add(postres); }
+                    if (postres != null) { DishesList.Add(postres); }
 
-                DishesList.OrderBy(x => x.IdCategory).ToList();
-                DrinksList.OrderBy(x => x.IdCategory).ToList();
+                    DishesList.OrderBy(x => x.IdCategory).ToList();
+                    DrinksList.OrderBy(x => x.IdCategory).ToList();
 
-                #endregion
+                    #endregion
                 }
 
 
@@ -191,8 +192,6 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
-
-
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (IsActivity)
@@ -205,7 +204,7 @@ namespace GoingOutMobile.ViewModels
                 || e.PropertyName == nameof(DescriptionStateUser)
                 || e.PropertyName == nameof(IsActive))
             {
-                IsModify = true;
+                IsModify = !Reserve.StateClient && !String.IsNullOrEmpty(Reserve.DescriptionStateClient) ? false : true;
             }
         }
 
@@ -250,7 +249,8 @@ namespace GoingOutMobile.ViewModels
                         BusinessName = Reserve.BusinessName,
                         StateClient = Reserve.StateClient,
                         DescriptionStateClient = Reserve.DescriptionStateClient,
-                        DescriptionStateUser = !String.IsNullOrEmpty(DescriptionStateUser) ? DescriptionStateUser : ""
+                        DescriptionStateUser = !String.IsNullOrEmpty(DescriptionStateUser) ? DescriptionStateUser : "",
+                        BookingComplete = false
                     };
 
                     var UserId = Preferences.Get("IdUser", string.Empty);
@@ -275,7 +275,7 @@ namespace GoingOutMobile.ViewModels
                             if (await _restaurantService.EditReservation(bookingResponse))
                             {
                                 //Llevar a la lista de reservas desde el menu costadp
-                                var uri = $"/{nameof(ReserveListPage)}";
+                                var uri = $"//{nameof(ReserveListPage)}?page=ReserveDetail";
                                 await _navegacionService.GoToAsync(uri);
 
                             }
@@ -343,7 +343,7 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task GetBackEvent()
         {
-            var uri = $"//{nameof(ReserveListPage)}";
+            var uri = $"//{nameof(ReserveListPage)}?page=ReserveDetail";
             await _navegacionService.GoToAsync(uri);
         }
 
@@ -403,6 +403,29 @@ namespace GoingOutMobile.ViewModels
             }
 
             IsActivity = false;
+        }
+
+
+        [RelayCommand]
+        async Task ProbarMP()
+        {
+            bool usuarioAcepto = await Shell.Current.DisplayAlert("Información", "Abonando por Mercado Pago, el restaurant puede guardar la mesa hasta 45 minutos de la hora pactada dentro de la reserva. ¿Quiere abonarlo?", "Sí", "No");
+
+            if (usuarioAcepto)
+            {
+                //var resultado1 = await _mercadoPagoService.MPCorto();
+                var resultado = await _mercadoPagoService.preparandoMP();
+
+                Uri uri = new Uri(resultado[1]);
+                //await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+
+                // Open the URI
+                await Launcher.Default.OpenAsync(uri);
+                //var uri = $"{nameof(MercadoPagoPage)}";
+                //await _navegacionService.GoToAsync(uri);
+            }
+
+
         }
 
     }

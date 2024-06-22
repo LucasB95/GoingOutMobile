@@ -186,7 +186,7 @@ namespace GoingOutMobile.Services
             var url = $"{settings.UrlBase}/Authentication/ChangePassword";
 
             var json = JsonConvert.SerializeObject(changePass);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var content = new StringContent(json, Encoding.UTF8, "applicatipsimion/json");
 
             var response = await client.PostAsync(url, content);
 
@@ -254,11 +254,15 @@ namespace GoingOutMobile.Services
 
             var response = await client.PostAsync(url, content);
 
-            if (!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
             {
                 var errorMessage = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException($"Mensaje de error: {errorMessage}");
                 //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return false;
             }
 
             return true;

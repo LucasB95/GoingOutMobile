@@ -170,25 +170,12 @@ namespace GoingOutMobile.ViewModels
             }
             else if (PageReturn.Contains("FavoritesPage"))
             {
-                uri = $"//{nameof(FavoritesPage)}";
+                uri = $"//{nameof(FavoritesPage)}?page=RestaurantDetail";
             }
 
             await _navegacionService.GoToAsync(uri);
         }
 
-        [RelayCommand]
-        async Task ProbarMP()
-        {
-            //var resultado1 = await _mercadoPagoService.MPCorto();
-            var resultado = await _mercadoPagoService.preparandoMP();
-
-            var uri = new Uri(resultado[1]);
-            await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
-
-
-            //var uri = $"{nameof(MercadoPagoPage)}";
-            //await _navegacionService.GoToAsync(uri);
-        }
 
         [RelayCommand]
         async Task SaveFavorite()
@@ -223,6 +210,7 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
+        [RelayCommand]
         async Task DeleteFavorite()
         {
             IsActivity = true;

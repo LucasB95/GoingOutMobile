@@ -217,7 +217,7 @@ namespace GoingOutMobile.ViewModels.Reserve
         [RelayCommand]
         async Task GetBackEvent()
         {
-            var uri = $"//{nameof(LastVisitedPage)}";
+            var uri = $"//{nameof(LastVisitedPage)}?page=LastVisitedDetail";
             await _navegacionService.GoToAsync(uri);
         }
 

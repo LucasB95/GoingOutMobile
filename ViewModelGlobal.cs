@@ -15,6 +15,8 @@ namespace GoingOutMobile
         bool isBusy;
 
         public bool IsNotBusy => !IsBusy;
+        
+        public static bool ReservasMSG = false;
 
     }
 }

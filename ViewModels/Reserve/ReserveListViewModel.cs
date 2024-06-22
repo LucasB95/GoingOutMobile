@@ -8,13 +8,15 @@ using MercadoPago.Resource.User;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GoingOutMobile.ViewModels
 {
-    public partial class ReserveListViewModel : ViewModelGlobal
+    public partial class ReserveListViewModel : ViewModelGlobal, IQueryAttributable
     {
         [ObservableProperty]
         Booking reserveSelected;
@@ -54,6 +56,17 @@ namespace GoingOutMobile.ViewModels
             }
         }
 
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            var page = query["page"].ToString();
+
+            if (!String.IsNullOrEmpty(page))
+            {
+                IsRefreshing = true;
+                await RefreshCommand.ExecuteAsync(this);
+            }
+        }
+
         public async Task LoadDataAsync()
         {
             if (IsBusy)
@@ -66,7 +79,7 @@ namespace GoingOutMobile.ViewModels
                 var listBooking = await _restaurantService.GetBookings(UserId);
                 if (listBooking != null)
                 {
-                    var reserveList = listBooking.Where(x => x.Date > DateTime.Now).ToList();
+                    var reserveList = listBooking.Where(x => x.BookingComplete == false).ToList();
                     if (reserveList != null && reserveList.Count > 0)
                     {
                         ReserveCollection = new ObservableCollection<Booking>(reserveList);
@@ -98,6 +111,29 @@ namespace GoingOutMobile.ViewModels
             GetDataCommand.Execute(this);
 
             IsRefreshing = false;
+        }
+    }
+    public class StateClientToMessageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Booking booking)
+            {
+                if (!booking.StateClient)
+                {
+                    return string.IsNullOrEmpty(booking.DescriptionStateClient) ? "Esperando confirmación" : "Reserva Rechazada";
+                }
+                else
+                {
+                    return "Reserva Confirmada";
+                }
+            }
+            return string.Empty;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -33,7 +33,7 @@
                             <Image Source="profile" HeightRequest="30" WidthRequest="30"  />
                             <VerticalStackLayout>
                                 <Label  Text="{Binding NombreUsuario}" FontSize="Large"/>
-                            </VerticalStackLayout>
+                            </VerticalStackLayout>                               
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 

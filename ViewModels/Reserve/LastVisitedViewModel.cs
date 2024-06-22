@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace GoingOutMobile.ViewModels.Reserve
 {
-    public partial class LastVisitedViewModel : ViewModelGlobal
+    public partial class LastVisitedViewModel : ViewModelGlobal, IQueryAttributable
     {
         [ObservableProperty]
         Booking reserveSelected;
@@ -52,7 +52,16 @@ namespace GoingOutMobile.ViewModels.Reserve
                 await _navegacionService.GoToAsync(uri);
             }
         }
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            var page = query["page"].ToString();
 
+            if (!String.IsNullOrEmpty(page))
+            {
+                IsRefreshing = true;
+                await RefreshCommand.ExecuteAsync(this);
+            }
+        }
         public async Task LoadDataAsync()
         {
             if (IsBusy)
@@ -65,7 +74,7 @@ namespace GoingOutMobile.ViewModels.Reserve
                 var listBooking = await _restaurantService.GetBookings(UserId);
                 if (listBooking != null)
                 {
-                    var lastVisited = listBooking.Where(x => x.Date < DateTime.Now).ToList();
+                    var lastVisited = listBooking.Where(x => x.BookingComplete == true).ToList();
                     if (lastVisited == null || lastVisited.Count == 0)
                     {
                         await Shell.Current.DisplayAlert("Mensaje", "No se pudo cargar la lista de reservas o no posee ninguna", "Aceptar");

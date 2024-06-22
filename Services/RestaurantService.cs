@@ -309,7 +309,7 @@ namespace GoingOutMobile.Services
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
 
-            var response = await client.PostAsync(url, content);
+            var response = await client.PutAsync(url, content);
 
             if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
             {

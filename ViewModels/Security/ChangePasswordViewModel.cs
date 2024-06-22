@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Login;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
+using GoingOutMobile.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,25 +15,31 @@ namespace GoingOutMobile.ViewModels.Security
     public partial class ChangePasswordViewModel : ViewModelGlobal
     {
         [ObservableProperty]
-        private string email;
+        private string password = string.Empty;
 
         [ObservableProperty]
-        private string password;
+        private string passwordConfirmation = string.Empty;
 
         [ObservableProperty]
-        private string passwordConfirmation;
+        private string passwordConfirmation2 = string.Empty;
 
         [ObservableProperty]
-        private bool isPassword = true;  
-        
+        private bool isPassword = true;
+
         [ObservableProperty]
         private bool isPasswordConfirmation = true;
 
         [ObservableProperty]
+        private bool isPasswordConfirmation2 = true;
+
+        [ObservableProperty]
         private string iconSeePass = "eyeclose.svg";
-        
+
         [ObservableProperty]
         private string iconSeePassConfirmation = "eyeclose.svg";
+
+        [ObservableProperty]
+        private string iconSeePassConfirmation2 = "eyeclose.svg";
 
         [ObservableProperty]
         private string name;
@@ -55,7 +62,7 @@ namespace GoingOutMobile.ViewModels.Security
             _navegacionService = navegacionService;
             _homeViewModel = homeViewModel;
 
-            (Shell.Current as AppShell).IsLogged = false;
+            //(Shell.Current as AppShell).IsLogged = false;
         }
 
         [RelayCommand]
@@ -63,12 +70,7 @@ namespace GoingOutMobile.ViewModels.Security
         {
             IsActivity = true;
 
-
-            if (String.IsNullOrEmpty(Email) && Email != Preferences.Get("Email", string.Empty))
-            {
-                await Shell.Current.DisplayAlert("Mensaje", "No ingreso un email valido o no corresponde al del usuario logeado", "Aceptar");
-            }
-            else if (String.IsNullOrEmpty(Password))
+            if (String.IsNullOrEmpty(Password))
             {
                 await Shell.Current.DisplayAlert("Mensaje", "No ingreso la contraseña actual", "Aceptar");
             }
@@ -76,12 +78,20 @@ namespace GoingOutMobile.ViewModels.Security
             {
                 await Shell.Current.DisplayAlert("Mensaje", "No ingreso la nueva contraseña", "Aceptar");
             }
+            else if (String.IsNullOrEmpty(PasswordConfirmation2))
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "No ingreso la confirmacion de la nueva contraseña", "Aceptar");
+            }
+            else if (PasswordConfirmation != PasswordConfirmation2)
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "La nueva contraseña no coincide con la repeticíon de contraseña", "Aceptar");
+            }
             else
             {
                 var changePassRequest = new ChangePassRequest
                 {
                     UserName = Preferences.Get("userName", string.Empty),
-                    Email = Email,
+                    Email = Preferences.Get("Email", string.Empty),
                     PasswordOld = Password,
                     PasswordNew = PasswordConfirmation
                 };
@@ -100,6 +110,10 @@ namespace GoingOutMobile.ViewModels.Security
                         Preferences.Set("UserId", Persona.UserId);
 
                         await Shell.Current.DisplayAlert("Mensaje", "Contraseña modificada correctamente", "Aceptar");
+
+                        var uri = $"//{nameof(SettingsPage)}";
+                        await _navegacionService.GoToAsync(uri);
+
                     }
                 }
                 else
@@ -125,8 +139,8 @@ namespace GoingOutMobile.ViewModels.Security
                 IsPassword = true;
                 IconSeePass = "eyeclose.svg";
             }
-        } 
-        
+        }
+
         [RelayCommand]
         public void ChangeStatusConfirmationPassword()
         {
@@ -139,6 +153,21 @@ namespace GoingOutMobile.ViewModels.Security
             {
                 IsPasswordConfirmation = true;
                 IconSeePassConfirmation = "eyeclose.svg";
+            }
+        }
+
+        [RelayCommand]
+        public void ChangeStatusConfirmation2Password()
+        {
+            if (IsPasswordConfirmation2)
+            {
+                IsPasswordConfirmation2 = false;
+                IconSeePassConfirmation2 = "eyeopen.svg";
+            }
+            else
+            {
+                IsPasswordConfirmation2 = true;
+                IconSeePassConfirmation2 = "eyeclose.svg";
             }
         }
 

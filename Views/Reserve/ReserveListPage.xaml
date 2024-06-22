@@ -10,6 +10,11 @@
              BackgroundColor="{StaticResource Primary}"
              >
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <vm:StateClientToMessageConverter x:Key="StateClientToMessageConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <RefreshView IsRefreshing="{Binding IsRefreshing}"
           Command="{Binding RefreshCommand}" RefreshColor="Teal" BackgroundColor="{StaticResource Secondary}">
@@ -54,73 +59,86 @@
                                 </Border.Stroke>
 
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <!-- Columna para la imagen -->
-                                        <ColumnDefinition Width="Auto" />
-                                        <!-- Columna para la línea divisoria -->
-                                        <ColumnDefinition Width="*" />
-                                        <!-- Columna para la información -->
-                                    </Grid.ColumnDefinitions>
+                                <AbsoluteLayout HeightRequest="150">
+                                    <!-- Grid con el contenido del borde -->
+                                    <Grid AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
 
+                                        <Image 
+                            Grid.Column="0" 
+                            HeightRequest="150"
+                            WidthRequest="150"
+                            Aspect="Fill"
+                            Source="foto_resto.png"/>
 
-                                    <Image 
-                                    Grid.Column="0" 
-                                    HeightRequest="150"
-                                    WidthRequest="150"
-                                    Aspect="Fill"
-                                    Source="foto_resto.png"
-                                    />
+                                        <BoxView 
+                            Grid.Column="1"
+                            WidthRequest="3"
+                            BackgroundColor="Teal"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="End"
+                            Margin="10,0,0,0"
+                            Color="Teal"/>
 
-
-                                    <!-- Línea divisoria -->
-                                    <BoxView 
-                                     Grid.Column="1"
-                                     WidthRequest="3"
-                                     BackgroundColor="Teal"
-                                     VerticalOptions="FillAndExpand"
-                                     HorizontalOptions="End"
-                                     Margin="10,0,0,0"
-                                     Color="Teal"
-                                     />
-
-                                    <StackLayout 
-                                     Grid.Column="2" 
-                                     Padding="15"
-                                     Spacing="5"
-                                      >
-
-                                        <Label 
-                                        FontSize="Small"
-                                        Text="{Binding BusinessName}"
-                                        />
-                                        <VerticalStackLayout>
+                                        <StackLayout 
+                                        Grid.Column="2" 
+                                        Padding="15"
+                                        Spacing="5">
                                             <Label 
-                                         FontSize="Small"
-                                         Text="Fecha/hora: "
-                                         />
-                                        <Label 
-                                        FontSize="Small"
-                                        Padding="0,0,0,0"
-                                        Text="{Binding Date}"
-                                        />
+                                            FontSize="Small"
+                                            Text="{Binding BusinessName}"/>
+                                            <VerticalStackLayout>
+                                                <Label 
+                                                FontSize="Small"
+                                                Text="Fecha/hora: "/>
+                                                <Label 
+                                                FontSize="Small"
+                                                Padding="0,0,0,0"
+                                                Text="{Binding Date}"/>
+                                            </VerticalStackLayout>
 
-                                        </VerticalStackLayout>
+                                            <HorizontalStackLayout>
+                                                <Label 
+                                                FontSize="Small"
+                                                Text="Cantidad de personas: "/>
+                                                <Label 
+                                                FontSize="Small"
+                                                Text="{Binding AmountPeople}"/>
+                                            </HorizontalStackLayout>
+                                        </StackLayout>
+                                    </Grid>
 
-                                        <HorizontalStackLayout>
-                                         <Label 
-                                         FontSize="Small"
-                                         Text="Cantidad de personas: "
-                                         />
-                                        <Label 
-                                        FontSize="Small"
-                                        Text="{Binding AmountPeople}"
-                                        />
-                                        </HorizontalStackLayout>
-                                        
-                                    </StackLayout>
-                                </Grid>
+                                    <!-- Label para la leyenda que se superpone sobre el contenido -->
+                                    <Label
+                                    AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                    AbsoluteLayout.LayoutFlags="All"
+                                    Opacity="0.8"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    FontSize="Large"
+                                    FontAttributes="Bold"
+                                    Text="{Binding ., Converter={StaticResource StateClientToMessageConverter}}">
+
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding ., Converter={StaticResource StateClientToMessageConverter}}" Value="Esperando confirmación">
+                                                <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
+                                                <Setter Property="TextColor" Value="Blue"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding ., Converter={StaticResource StateClientToMessageConverter}}" Value="Reserva Rechazada">
+                                                <Setter Property="BackgroundColor" Value="LightCoral"/>
+                                                <Setter Property="TextColor" Value="WhiteSmoke"/>
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding ., Converter={StaticResource StateClientToMessageConverter}}" Value="Reserva Confirmada">
+                                                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                                                <Setter Property="TextColor" Value="Black"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </AbsoluteLayout>
 
                             </Border>
                         </DataTemplate>

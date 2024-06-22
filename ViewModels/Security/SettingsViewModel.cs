@@ -85,6 +85,7 @@ namespace GoingOutMobile.ViewModels
             var IdUser = Preferences.Get("IdUser", string.Empty);
             await _securityService.Logout(IdUser);
             Preferences.Set("tokenGoingOut", string.Empty);
+            ReservasMSG = false;
             var uri = $"{nameof(HomePage)}";
             await _navegacionService.GoToAsync(uri);
 
