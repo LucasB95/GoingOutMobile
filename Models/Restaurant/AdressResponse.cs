@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,5 +23,9 @@ namespace GoingOutMobile.Models.Restaurant
         public int Numeration { get; set; }
         [JsonProperty("pc")]
         public int PC { get; set; }
+
+        [NotMapped]
+        public Location Coordenadas { get; set; }
     }
+
 }

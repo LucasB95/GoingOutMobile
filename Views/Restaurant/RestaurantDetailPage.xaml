@@ -92,8 +92,7 @@
 
                     </VerticalStackLayout>
 
-
-                    <ScrollView Grid.Row="5" 
+                    <StackLayout Grid.Row="5" 
                         AbsoluteLayout.LayoutBounds="0,0,1,1"
                         AbsoluteLayout.LayoutFlags="All"
                         VerticalOptions="CenterAndExpand"
@@ -107,7 +106,9 @@
                                 <Label VerticalOptions="Center" FontSize="Medium" Text="Menu" TextColor="Black"/>
                             </HorizontalStackLayout>
 
-                            <Border  
+                            <ScrollView Focused="HandleScrollViewFocused">
+                                <StackLayout>
+                                    <Border  
                                     Padding="4,4"
                                     HorizontalOptions="Center"
                                     BackgroundColor="Teal"
@@ -202,84 +203,91 @@
 
                                 </CollectionView>
 
-                            </Border>
+                            </Border>                                   
 
-                            <Border  
-                                    Padding="4,4"
-                                    HorizontalOptions="Center"
-                                    BackgroundColor="Teal"
-                             >
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="10,10,10,10"  />
-                                </Border.StrokeShape>
+                                </StackLayout>
+                            </ScrollView>
+                            <ScrollView Focused="HandleScrollViewFocused">
+                                <StackLayout>
+                                    <Border  
+        Padding="4,4"
+        HorizontalOptions="Center"
+        BackgroundColor="Teal"
+ >
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10,10,10,10"  />
+                                        </Border.StrokeShape>
 
-                                <CollectionView
-                                HeightRequest="400"
-                                ItemsSource="{Binding DrinksList}"
-                                BackgroundColor="WhiteSmoke"
-                                IsGrouped="True"
-                                >
-                                    <CollectionView.GroupHeaderTemplate>
+                                        <CollectionView
+    HeightRequest="400"
+    ItemsSource="{Binding DrinksList}"
+    BackgroundColor="WhiteSmoke"
+    IsGrouped="True"
+    >
+                                            <CollectionView.GroupHeaderTemplate>
 
-                                        <DataTemplate x:DataType="model:MenuCategoriesDrinks">
+                                                <DataTemplate x:DataType="model:MenuCategoriesDrinks">
 
-                                            <Border  
-                                                Padding="70,3"
-                                                HorizontalOptions="Center"
-                                                BackgroundColor="NavajoWhite"
-                                                StrokeThickness="3"
-                                                >
-                                                <Border.StrokeShape>
-                                                    <RoundRectangle CornerRadius="25,25,25,25"  />
-                                                </Border.StrokeShape>
+                                                    <Border  
+                    Padding="70,3"
+                    HorizontalOptions="Center"
+                    BackgroundColor="NavajoWhite"
+                    StrokeThickness="3"
+                    >
+                                                        <Border.StrokeShape>
+                                                            <RoundRectangle CornerRadius="25,25,25,25"  />
+                                                        </Border.StrokeShape>
 
-                                                <Border.Stroke>
-                                                    <LinearGradientBrush EndPoint="0,1">
-                                                        <GradientStop Color="Teal"
-                                                            Offset="0.1" />
-                                                        <GradientStop Color="Teal"
-                                                         Offset="1.0" />
-                                                    </LinearGradientBrush>
-                                                </Border.Stroke>
+                                                        <Border.Stroke>
+                                                            <LinearGradientBrush EndPoint="0,1">
+                                                                <GradientStop Color="Teal"
+                                Offset="0.1" />
+                                                                <GradientStop Color="Teal"
+                             Offset="1.0" />
+                                                            </LinearGradientBrush>
+                                                        </Border.Stroke>
 
-                                                <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
+                                                        <Label FontSize="18" FontAttributes="Bold" Text="{Binding NameCategory}" />
 
-                                            </Border>
+                                                    </Border>
 
-                                        </DataTemplate>
+                                                </DataTemplate>
 
-                                    </CollectionView.GroupHeaderTemplate>
+                                            </CollectionView.GroupHeaderTemplate>
 
-                                    <CollectionView.ItemsLayout>
-                                        <LinearItemsLayout ItemSpacing="10"  Orientation="Vertical"/>
-                                    </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemsLayout>
+                                                <LinearItemsLayout ItemSpacing="10"  Orientation="Vertical"/>
+                                            </CollectionView.ItemsLayout>
 
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate x:DataType="model:DrinksResponse">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model:DrinksResponse">
 
-                                            <VerticalStackLayout Margin="5" HeightRequest="70">
+                                                    <VerticalStackLayout Margin="5" HeightRequest="70">
 
-                                                <HorizontalStackLayout >
-                                                    <VerticalStackLayout>
-                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Name}" FontAttributes="Bold" TextDecorations="Underline"/>
-                                                        <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Description}" />
+                                                        <HorizontalStackLayout >
+                                                            <VerticalStackLayout>
+                                                                <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Name}" FontAttributes="Bold" TextDecorations="Underline"/>
+                                                                <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Description}" />
 
-                                                        <HorizontalStackLayout>
-                                                            <Label  HorizontalOptions="Start" FontSize="Small" Text="$" FontAttributes="Bold"/>
-                                                            <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Price}" />
+                                                                <HorizontalStackLayout>
+                                                                    <Label  HorizontalOptions="Start" FontSize="Small" Text="$" FontAttributes="Bold"/>
+                                                                    <Label  HorizontalOptions="Start" FontSize="Small" Text="{Binding Price}" />
+                                                                </HorizontalStackLayout>
+
+                                                            </VerticalStackLayout>
                                                         </HorizontalStackLayout>
 
                                                     </VerticalStackLayout>
-                                                </HorizontalStackLayout>
 
-                                            </VerticalStackLayout>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
 
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
+                                        </CollectionView>
 
-                                </CollectionView>
+                                    </Border>
 
-                            </Border>
+                                </StackLayout>
+                            </ScrollView>
 
                             <HorizontalStackLayout 
                             VerticalOptions="EndAndExpand" 
@@ -356,7 +364,7 @@
 
                         </VerticalStackLayout>
 
-                    </ScrollView>
+                    </StackLayout>
 
                 </Grid>
 

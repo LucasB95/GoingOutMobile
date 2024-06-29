@@ -24,6 +24,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
 
                 <ImageButton 
@@ -56,6 +57,14 @@
                     </SearchBar.Behaviors>
 
                 </SearchBar>
+
+                <Button 
+                    Grid.Column="2"
+                    Text="Buscar Restaurant Cercanos"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Command="{Binding BuscarRestaurantesCercanosCommand}"
+                />  
             </Grid>
 
             <CollectionView

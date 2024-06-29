@@ -19,6 +19,9 @@ namespace GoingOutMobile.ViewModels
         string nombreUsuario;
 
         [ObservableProperty]
+        string direccion;
+
+        [ObservableProperty]
         CategoriesMobileResponse categoriesMobileSelected;
 
         [ObservableProperty]
@@ -42,18 +45,17 @@ namespace GoingOutMobile.ViewModels
         public Command GetDataCommand { get; set; }
 
         private readonly IGenericQueriesServices _genericQueriesServices;
-
         private readonly IRestaurantService _restaurantService;
-
         private readonly INavegacionService _navegacionService;
-
-        public HomeViewModel(IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService, IRestaurantService restaurantService)
+        private readonly IMaps _maps;
+        public HomeViewModel(IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService, IRestaurantService restaurantService, IMaps maps)
         {
             _genericQueriesServices = genericQueriesServices;
             _navegacionService = navegacionService;
             _restaurantService = restaurantService;
 
             PropertyChanged += RestaurantDetailViewModel_PropertyChanged;
+            _maps = maps;
         }
 
         private async void RestaurantDetailViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -78,25 +80,7 @@ namespace GoingOutMobile.ViewModels
                 var listFavorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
                 Favorites = new ObservableCollection<RestaurantResponse>(listFavorites);
 
-                var UserId = Preferences.Get("IdUser", string.Empty);
-                var listBooking = await _restaurantService.GetBookings(UserId);
-                if (listBooking != null)
-                {
-                    MostrarMGS = listBooking.Any(x => x.BookingComplete == false);
-
-                    if (MostrarMGS && !ReservasMSG)
-                    {
-                        ReservasMSG = true;
-                        bool usuarioAcepto = await Shell.Current.DisplayAlert("Reservas", "Revise el estado de sus reservas. ¿Quiere verlas?", "Sí", "No");
-
-                        if (usuarioAcepto)
-                        {
-                            var uri = $"{nameof(ReserveListPage)}?page=HomePage";
-                            await _navegacionService.GoToAsync(uri);
-                        }
-                    }
-
-                }
+                //var dir = await _maps.ObtenerUbicacionActualAsync();
 
             }
             catch (Exception e)
@@ -125,14 +109,6 @@ namespace GoingOutMobile.ViewModels
             var uri = $"{nameof(RestaurantListPage)}?nameCategory={CategoriesMobileSelected.Name}";
             await _navegacionService.GoToAsync(uri);
         }  
-        
-        [RelayCommand]
-        async Task VerificarReservas()
-        {
-            var uri = $"{nameof(ReserveListPage)}?page=HomePage";
-            await _navegacionService.GoToAsync(uri);
-        }
-
 
         [RelayCommand]
         async Task TapBusquedaRestaurant()

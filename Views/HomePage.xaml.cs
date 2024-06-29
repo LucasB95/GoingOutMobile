@@ -1,3 +1,4 @@
+using GoingOutMobile.Services;
 using GoingOutMobile.ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -22,8 +23,14 @@ public partial class HomePage : ContentPage
             var jwt_token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
             var time = jwt_token.ValidTo;
             //var tokenUsuario = jwt_token.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Rsa)?.Value;
-            var tiempoToken = DateTime.Compare(time, DateTime.UtcNow);
-            if (time < DateTime.UtcNow)
+            //var tiempoToken = DateTime.Compare(time, DateTime.UtcNow);
+
+            bool userLoggedIn = (time >= DateTime.UtcNow); // Asume que el usuario está logueado si el token es válido
+
+            var bookingCheckerService = ServiceLocator.GetService<BookingService>();
+            bookingCheckerService.UpdateUserLoginStatus(userLoggedIn);
+
+            if (!userLoggedIn)
             {
                 await Shell.Current.GoToAsync($"{nameof(LoginPage)}");
             }

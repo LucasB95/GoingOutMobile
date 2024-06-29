@@ -176,7 +176,6 @@ namespace GoingOutMobile.ViewModels
             await _navegacionService.GoToAsync(uri);
         }
 
-
         [RelayCommand]
         async Task SaveFavorite()
         {
@@ -313,8 +312,15 @@ namespace GoingOutMobile.ViewModels
 
         }
 
+
+        private void HandleScrollViewFocused(object sender, FocusEventArgs e)
+        {
+            // Evitar que el ScrollView reciba el enfoque
+            if (sender is ScrollView scrollView)
+            {
+                scrollView.Unfocus();
+            }
+        }
+
     }
-
-
-
 }

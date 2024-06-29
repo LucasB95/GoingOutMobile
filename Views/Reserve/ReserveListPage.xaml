@@ -118,7 +118,7 @@
                                     AbsoluteLayout.LayoutFlags="All"
                                     Opacity="0.8"
                                     HorizontalTextAlignment="Center"
-                                    VerticalTextAlignment="Center"
+                                    VerticalTextAlignment="Start"
                                     FontSize="Large"
                                     FontAttributes="Bold"
                                     Text="{Binding ., Converter={StaticResource StateClientToMessageConverter}}">

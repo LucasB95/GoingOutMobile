@@ -10,6 +10,7 @@ public class Settings
     public string UrlBase { get; set; }
     public string SecretKey { get; set; }
     public string DbKey { get; set; }
+    public string GoogleMaps { get; set; }
 
 }
 

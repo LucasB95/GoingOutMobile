@@ -42,6 +42,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IGenericQueriesServices, GenericQueriesServices>();
         builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
         builder.Services.AddSingleton<SecurityService>();
+        builder.Services.AddSingleton<IMaps, Maps>();
 
         builder.Services.AddTransient <MainPageViewModel>();
         builder.Services.AddTransient<MainPage>();
@@ -53,6 +54,16 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IMercadoPagoService, MercadoPagoService>();
         Routing.RegisterRoute(nameof(MercadoPagoPage), typeof(MercadoPagoPage));
+
+        builder.Services.AddSingleton<BookingService>();
+
+        //var app = builder.Build();
+
+        //// Obtén una instancia de BookingCheckerService para iniciar el temporizador
+        //var bookingCheckerService = app.Services.GetService<BookingService>();
+
+        //return app;
+
 
 
         #region Security
@@ -138,9 +149,17 @@ public static class MauiProgram
 
 
 #if DEBUG
+
+
         builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
-	}
+
+        var app = builder.Build();
+        ServiceLocator.Initialize(app.Services);
+
+        return app;
+
+        //return builder.Build();
+    }
 }

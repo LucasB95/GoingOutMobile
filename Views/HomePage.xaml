@@ -35,6 +35,12 @@
                                 <Label  Text="{Binding NombreUsuario}" FontSize="Large"/>
                             </VerticalStackLayout>                               
                         </HorizontalStackLayout>
+                        <!--<HorizontalStackLayout Spacing="20" Padding="10,10,10,10" >
+                            <Image Source="location_icon" HeightRequest="30" WidthRequest="30"  />
+                            <VerticalStackLayout>
+                                <Label  Text="{Binding NombreUsuario}" FontSize="Large"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>-->
                     </VerticalStackLayout>
 
                     <Border 

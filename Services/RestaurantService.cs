@@ -338,7 +338,6 @@ namespace GoingOutMobile.Services
                 throw new ArgumentNullException(nameof(IdUser));
             }
 
-
             var uri = $"{settings.UrlBase}/Bookings/ListBooking/{IdUser}";
 
             var response = await client.GetAsync(uri);

@@ -125,7 +125,7 @@ namespace GoingOutMobile.ViewModels
                             if (await _restaurantService.NewReserve(bookingCreate))
                             {
                                 //Llevar a la lista de reservas desde el menu costadp
-                                var uri = $"/{nameof(ReserveListPage)}?page=Booking";
+                                var uri = $"//{nameof(ReserveListPage)}?page=Booking";
                                 await _navegacionService.GoToAsync(uri);
 
                             }
