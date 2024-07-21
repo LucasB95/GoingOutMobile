@@ -6,19 +6,34 @@
              Shell.NavBarIsVisible="False"
              BackgroundColor="{StaticResource Primary}"
              >
-    
-    <VerticalStackLayout 
+
+
+    <Grid>       
+        
+        <ImageButton 
+         Source="back_icon"
+         CornerRadius="10"
+         BackgroundColor="White"
+         HeightRequest="50"
+         WidthRequest="50"
+         Padding="5"
+         HorizontalOptions="Start"
+         VerticalOptions="Start"
+         Command="{Binding GetBackEventCommand}"
+        />
+        
+        <VerticalStackLayout 
         VerticalOptions="Center"
         Margin="20,0,20,0"
         Spacing="20"
         >
+
         <Image
             Source="logo_secund.png"
             HorizontalOptions="Center"
             HeightRequest="130"
             WidthRequest="300"
             />
-
 
         <Label 
             Text="Ingresá tus datos para crear tu cuenta"
@@ -112,5 +127,7 @@
         </Border>
 
     </VerticalStackLayout>
+        
+    </Grid>
     
 </ContentPage>

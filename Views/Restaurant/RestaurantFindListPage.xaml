@@ -12,6 +12,7 @@
 
     <AbsoluteLayout VerticalOptions="FillAndExpand"
                 HorizontalOptions="FillAndExpand">
+        
         <VerticalStackLayout 
                 AbsoluteLayout.LayoutBounds="0,0,1,1"
                 AbsoluteLayout.LayoutFlags="All"
@@ -24,7 +25,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
 
                 <ImageButton 
@@ -53,97 +53,135 @@
                             ShouldDismissKeyboardAutomatically="True"                            
                         />
 
-
                     </SearchBar.Behaviors>
 
                 </SearchBar>
 
-                <Button 
-                    Grid.Column="2"
-                    Text="Buscar Restaurant Cercanos"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Command="{Binding BuscarRestaurantesCercanosCommand}"
-                />  
             </Grid>
 
-            <CollectionView
-            Margin="10"
-            SelectionMode="Single"
-            ItemsSource="{Binding Restaurant}"
-            SelectedItem="{Binding RestaurantSelected, Mode=TwoWay}"
-            >
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
-                </CollectionView.ItemsLayout>
+            <Border                       
+             Padding="15"
+             BackgroundColor="WhiteSmoke"
+             StrokeThickness="3"
+             WidthRequest="320"
+             HeightRequest="55"
+             HorizontalOptions="Center"
+             VerticalOptions="Center"
+             >
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20,20,20,20"  />
+                </Border.StrokeShape>
 
-                <CollectionView.ItemTemplate>
+                <Border.Stroke>
+                    <LinearGradientBrush EndPoint="0,1">
+                        <GradientStop Color="Teal"
+                                 Offset="0.1" />
+                        <GradientStop Color="Teal"
+                                 Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Stroke>
 
-                    <DataTemplate x:DataType="model:RestaurantResponse">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="4*" />
-                                <ColumnDefinition Width="6*" />
-                            </Grid.ColumnDefinitions>
-                            <Frame 
+                <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                            VerticalOptions="Center">
+                    <Image Source="location_icon" HeightRequest="25" WidthRequest="25" />
+                    <Label Padding="5,0,0,0"
+                             Text="Buscar Restaurantes Cercanos"
+                             FontSize="Subtitle"
+                             />
+                </HorizontalStackLayout>
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BuscarRestaurantesCercanosCommand}"/>
+                </Border.GestureRecognizers>
+              </Border>
+
+            <Grid>
+                <!-- Message displayed when the Restaurant collection is empty -->
+                <Label Text="No se encontraron restaurantes"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="Medium"
+               TextColor="Black"
+               IsVisible="{Binding IsRestaurantListEmpty}"/>
+
+                <CollectionView
+                Margin="10"
+                SelectionMode="Single"
+                ItemsSource="{Binding Restaurant}"
+                SelectedItem="{Binding RestaurantSelected, Mode=TwoWay}"
+                >
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout ItemSpacing="20" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+
+                        <DataTemplate x:DataType="model:RestaurantResponse">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="4*" />
+                                    <ColumnDefinition Width="6*" />
+                                </Grid.ColumnDefinitions>
+                                <Frame 
                         Grid.Column="0"
                         CornerRadius="10"   
                         Padding="0"
                         IsClippedToBounds="True"
                            >
-                                <Image 
+                                    <Image 
                             HeightRequest="150"
                             WidthRequest="150"
                             Aspect="Fill"
                             Source="foto_resto.png"
                             />
-                            </Frame>
-                            <StackLayout 
+                                </Frame>
+                                <StackLayout 
                         Grid.Column="1" 
                         Padding="15"
                         Spacing="10"
                                  >
-                                <Label 
+                                    <Label 
                             FontSize="Small"
                             Text="{Binding BusinessName}"
                             />
-                                <HorizontalStackLayout>
-                                    <Label 
+                                    <HorizontalStackLayout>
+                                        <Label 
                             FontSize="Small"
                             Padding="0,0,5,0"
                             Text="{Binding Adress.Province}"
                             />
-                                    <Label 
+                                        <Label 
                             FontSize="Small"
                             Text="{Binding Adress.Location}"
                             />
-                                </HorizontalStackLayout>
-                                <HorizontalStackLayout Padding="0,0,0,0">
-                                    <Label 
+                                    </HorizontalStackLayout>
+                                    <HorizontalStackLayout Padding="0,0,0,0">
+                                        <Label 
                             FontSize="Small"
                             Text="{Binding Adress.Street}"
                             Padding="0,0,5,0"
                             />
-                                    <Label 
+                                        <Label 
                             FontSize="Small"
                             Text="{Binding Adress.Numeration}"
                             />
 
-                                </HorizontalStackLayout>
-                                <Label 
+                                    </HorizontalStackLayout>
+                                    <Label 
                             FontSize="Small"
                             Text="{Binding Adress.PC}"
                             />
-                            </StackLayout>
-                        </Grid>
+                                </StackLayout>
+                            </Grid>
 
-                    </DataTemplate>
+                        </DataTemplate>
 
-                </CollectionView.ItemTemplate>
+                    </CollectionView.ItemTemplate>
 
-            </CollectionView>
+                </CollectionView>
 
-
+            </Grid>
+            
         </VerticalStackLayout>
         <AbsoluteLayout
                     AbsoluteLayout.LayoutBounds="0.5,0.5,1,1"

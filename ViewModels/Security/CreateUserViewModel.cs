@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Login;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
+using GoingOutMobile.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,12 +37,14 @@ namespace GoingOutMobile.ViewModels
 
 
         private readonly SecurityService _securityService;
+        private readonly INavegacionService _navegacionService;
 
-        public CreateUserViewModel(SecurityService securityService, IConnectivity connectivity)
+        public CreateUserViewModel(SecurityService securityService, IConnectivity connectivity, INavegacionService navegacionService)
         {
             _securityService = securityService;
             _connectivity = connectivity;
             _connectivity.ConnectivityChanged += _connectivity_ConnectivityChanged;
+            _navegacionService = navegacionService;
         }
         private void _connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
@@ -109,6 +112,13 @@ namespace GoingOutMobile.ViewModels
                 IsPassword = true;
                 IconSeePass = "eyeclose.svg";
             }
+        }
+
+        [RelayCommand]
+        async Task GetBackEvent()
+        {
+            var uri = $"{nameof(LoginPage)}";
+            await _navegacionService.GoToAsync(uri);
         }
     }
 }

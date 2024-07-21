@@ -47,7 +47,6 @@ namespace GoingOutMobile.ViewModels
         private readonly IGenericQueriesServices _genericQueriesServices;
         private readonly IRestaurantService _restaurantService;
         private readonly INavegacionService _navegacionService;
-        private readonly IMaps _maps;
         public HomeViewModel(IGenericQueriesServices genericQueriesServices, INavegacionService navegacionService, IRestaurantService restaurantService, IMaps maps)
         {
             _genericQueriesServices = genericQueriesServices;
@@ -55,7 +54,6 @@ namespace GoingOutMobile.ViewModels
             _restaurantService = restaurantService;
 
             PropertyChanged += RestaurantDetailViewModel_PropertyChanged;
-            _maps = maps;
         }
 
         private async void RestaurantDetailViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -79,8 +77,6 @@ namespace GoingOutMobile.ViewModels
                 CategoriesMobiles = new ObservableCollection<CategoriesMobileResponse>(listCategories);
                 var listFavorites = await _restaurantService.GetFavorites(Preferences.Get("UserId", string.Empty));
                 Favorites = new ObservableCollection<RestaurantResponse>(listFavorites);
-
-                //var dir = await _maps.ObtenerUbicacionActualAsync();
 
             }
             catch (Exception e)

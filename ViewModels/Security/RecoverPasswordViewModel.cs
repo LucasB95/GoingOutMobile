@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using GoingOutMobile.Models.Login;
 using GoingOutMobile.Services;
 using GoingOutMobile.Services.Interfaces;
+using GoingOutMobile.Views;
 using GoingOutMobile.Views.Security;
 using System;
 using System.Collections.Generic;
@@ -127,6 +128,11 @@ namespace GoingOutMobile.ViewModels.Security
             IsActivity = false;
         }
 
-
+        [RelayCommand]
+        async Task GetBackEvent()
+        {
+            var uri = $"{nameof(LoginPage)}";
+            await _navegacionService.GoToAsync(uri);
+        }
     }
 }

@@ -29,6 +29,9 @@ namespace GoingOutMobile.ViewModels
         [ObservableProperty]
         private bool isActivity = false;
 
+        [ObservableProperty]
+        private bool isRestaurantListEmpty = false;
+
         private readonly IGenericQueriesServices _genericQueriesServices;
 
         private readonly IRestaurantService _restaurantService;
@@ -54,12 +57,14 @@ namespace GoingOutMobile.ViewModels
         public ICommand EjecutarBusqueda => new Command(async () =>
         {
             IsActivity = true;
+            IsRestaurantListEmpty = false;
 
             var restaurantList = await _restaurantService.GetRestaurantSearch(SearchText);
             Restaurant = new ObservableCollection<RestaurantResponse>(restaurantList);
             PropertyChanged += RestaurantBusquedaViewModel_PropertyChanged;
 
             Preferences.Set("searchRestaurant", SearchText);
+            if (Restaurant.Count == 0) { IsRestaurantListEmpty = true; }
 
             IsActivity = false;
 
@@ -68,28 +73,47 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task BuscarRestaurantesCercanos()
         {
-            //string apiKey = "TU_API_KEY_DE_GOOGLE";
+            IsActivity = true;
 
-            //var direcciones = new List<AdressResponse>
-            //    {
-            //        new Direccion { Calle = "Tu Calle", Numero = "1234", Localidad = "Tu Localidad", Provincia = "Tu Provincia" },
-            //        // Otras direcciones...
-            //    };
+            // Obtiene la ubicacion del dispositivo
+            var ubicacionActual = await _maps.ObtenerUbicacionActualAsync();
+            List<RestaurantResponse> resultadoRestorant = new List<RestaurantResponse>();
+            int page = 2;
+            IsRestaurantListEmpty = false;
 
-            //// Geocodifica las direcciones
-            //await _maps.GeocodificarDireccionesAsync(direcciones, apiKey);
+            var direcciones = await _restaurantService.GetRestaurantAdress(page.ToString());
 
-            //// Obtiene la ubicacion del dispositivo
-            //var ubicacionActual = await _maps.ObtenerUbicacionActualAsync();
+            while (direcciones != null && direcciones.Total > 0 && direcciones.ClientsResponse.Count() > 0)
+            {
+                List<AdressResponse> adresses = new List<AdressResponse>();
 
-            //// Encuentra direcciones cercanas en un radio de 10Km
-            //var direccionesCercanas = _maps.ObtenerDireccionesCercanas(ubicacionActual, direcciones, 10);
+                foreach (var item in direcciones.ClientsResponse)
+                {
+                    adresses.Add(item.Adress);
+                }
 
-            //// Muestra las direcciones cercanas
-            //foreach (var direccion in direccionesCercanas)
-            //{
-            //    Console.WriteLine($"{direccion.Calle} {direccion.Numero}, {direccion.Localidad}, {direccion.Provincia}");
-            //}
+                // Geocodifica las direcciones e inserta las coordenadas en cada Direccion para luego hacer la busqueda por cercania
+                await _maps.GeocodificarDireccionesAsync(adresses);
+
+                // Encuentra direcciones cercanas en un radio de 10Km
+                var direccionesCercanas = _maps.ObtenerDireccionesCercanas(ubicacionActual, adresses, 10);
+
+                var resultadoResto = direcciones.ClientsResponse.Where(x => direccionesCercanas.Contains(x.Adress)).ToList();
+                resultadoRestorant.AddRange(resultadoResto);
+
+                if (direcciones.NextPage == true && Restaurant.Count() < 10)
+                {
+                    page++;
+                    direcciones = await _restaurantService.GetRestaurantAdress(page.ToString());
+                }
+                else { direcciones = null; }
+
+            }
+
+            Restaurant = new ObservableCollection<RestaurantResponse>(resultadoRestorant);
+            if (Restaurant.Count == 0) { IsRestaurantListEmpty = true; }
+
+            IsActivity = false;
         }
 
 

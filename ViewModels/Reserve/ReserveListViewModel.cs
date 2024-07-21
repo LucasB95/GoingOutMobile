@@ -79,12 +79,12 @@ namespace GoingOutMobile.ViewModels
                 var listBooking = await _restaurantService.GetBookings(UserId);
                 if (listBooking != null)
                 {
-                    var reserveList = listBooking.Where(x => x.BookingComplete == false).ToList();
+                    var reserveList = listBooking.Where(x => x.BookingComplete == false && x.Date > DateTime.Now).ToList();
                     if (reserveList != null && reserveList.Count > 0)
                     {
                         ReserveCollection = new ObservableCollection<Booking>(reserveList.OrderBy(x => x.Date));
 
-                        int ReservasPendientes = reserveList.Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient)).ToList().Count();
+                        int ReservasPendientes = reserveList.Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient) && x.Date > DateTime.Now).ToList().Count();
 
                         if (ReservasPendientes > 0)
                         {

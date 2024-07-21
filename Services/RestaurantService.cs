@@ -103,6 +103,38 @@ namespace GoingOutMobile.Services
 
             return (IEnumerable<RestaurantResponse>)JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
         }
+        public async Task<ClientsList> GetRestaurantAdress(string page)
+        {
+            await ValidaToken();
+
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            client.DefaultRequestHeaders.Add("Authorization", Preferences.Get("tokenGoingOut", string.Empty));
+
+            if (string.IsNullOrEmpty(page))
+            {
+                throw new ArgumentNullException(nameof(page));
+            }
+            var url = $"{settings.UrlBase}/Clients/GetAdressRestaurant/{page}";
+
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new ClientsList();
+            }
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<ClientsList>(jsonResult);
+        }
 
         #region Favorites
         public async Task<List<RestaurantResponse>> GetFavorites(string idUser)
@@ -290,7 +322,17 @@ namespace GoingOutMobile.Services
 
             var response = await client.PostAsync(url, content);
 
-            if (!response.IsSuccessStatusCode) return false;
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return false;
+            }
 
             return true;
         }
