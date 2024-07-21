@@ -31,7 +31,7 @@ public static class MauiProgram
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			})
+			}).UseMauiCommunityToolkit()
 			.UseMauiMaps();
 
 		builder.Configuration.AddConfiguration(config);
@@ -43,6 +43,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
         builder.Services.AddSingleton<SecurityService>();
         builder.Services.AddSingleton<IMaps, Maps>();
+        //builder.Services.AddSingleton<IGoogleAuthService, GoogleAuthService>();
 
         builder.Services.AddTransient <MainPageViewModel>();
         builder.Services.AddTransient<MainPage>();

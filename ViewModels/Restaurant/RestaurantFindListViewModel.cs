@@ -78,7 +78,7 @@ namespace GoingOutMobile.ViewModels
             // Obtiene la ubicacion del dispositivo
             var ubicacionActual = await _maps.ObtenerUbicacionActualAsync();
             List<RestaurantResponse> resultadoRestorant = new List<RestaurantResponse>();
-            int page = 2;
+            int page = 1;
             IsRestaurantListEmpty = false;
 
             var direcciones = await _restaurantService.GetRestaurantAdress(page.ToString());
