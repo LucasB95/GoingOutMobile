@@ -10,6 +10,7 @@ using GoingOutMobile.ViewModels.Reserve;
 using GoingOutMobile.Views.Security;
 using GoingOutMobile.ViewModels.Security;
 using CommunityToolkit.Maui;
+using GoingOutMobile.GoogleAuth;
 
 namespace GoingOutMobile;
 
@@ -43,7 +44,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IRestaurantService, RestaurantService>();
         builder.Services.AddSingleton<SecurityService>();
         builder.Services.AddSingleton<IMaps, Maps>();
-        //builder.Services.AddSingleton<IGoogleAuthService, GoogleAuthService>();
+        builder.Services.AddSingleton<IGoogleAuthService, GoogleAuthService>();
 
         builder.Services.AddTransient <MainPageViewModel>();
         builder.Services.AddTransient<MainPage>();
@@ -88,7 +89,6 @@ public static class MauiProgram
         builder.Services.AddTransient<SettingsPage>();
 
         Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
-        Routing.RegisterRoute(nameof(LoginGooglePage), typeof(LoginGooglePage));
         Routing.RegisterRoute(nameof(CreateUserPage), typeof(CreateUserPage));
         Routing.RegisterRoute(nameof(ChangePasswordPage), typeof(ChangePasswordPage));
         Routing.RegisterRoute(nameof(RecoverPasswordPage), typeof(RecoverPasswordPage));

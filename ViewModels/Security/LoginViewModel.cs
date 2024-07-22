@@ -85,11 +85,33 @@ namespace GoingOutMobile.ViewModels
             IsActivity = false;
         }
 
+        [RelayCommand(CanExecute = nameof(StatusConnection))]
+        public async Task LoginGoogleMethod(string token)
+        {
+            IsActivity = true;
+
+            var resultado = await _securityService.LoginGoogle(token);
+
+            if (resultado)
+            {
+                Name = Preferences.Get("userName", string.Empty);
+
+                Preferences.Set("UserId", Preferences.Get("IdUser", string.Empty));
+
+                Application.Current.MainPage = new AppShell();
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Mensaje", "Ingreso credenciales erroneas", "Aceptar");
+            }
+
+            IsActivity = false;
+        }
         private bool StatusConnection()
         {
             return _connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
         }
-        
+
         [RelayCommand]
         private async Task ForgotPassword()
         {
@@ -119,12 +141,9 @@ namespace GoingOutMobile.ViewModels
             await _navegacionService.GoToAsync(uri);
         }
 
-        [RelayCommand(CanExecute = nameof(StatusConnection))]
-        async Task LoginGoogleMethod()
-        {
-            var uri = $"{nameof(LoginGooglePage)}";
-            await _navegacionService.GoToAsync(uri);
-        }
+
+
+
 
     }
 }

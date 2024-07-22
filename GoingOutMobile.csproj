@@ -125,9 +125,6 @@
 	  <MauiXaml Update="Views\LastVisited\LastVisitedPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\Security\LoginGooglePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\Security\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -166,11 +163,17 @@
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerExceptionGoingOutMobileHideInfoBar="True" XamarinHotReloadDebuggerTimeoutExceptionGoingOutMobileHideInfoBar="True" XamarinHotReloadGenericExceptionInfoBarGoingOutMobileHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls" Version="8.0.70" />
+	  <PackageReference Update="Microsoft.Maui.Controls" Version="8.0.21" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.70" />
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.21" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+	  <PackageReference Include="Xamarin.GooglePlayServices.Auth">
+	    <Version>120.6.0.1</Version>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

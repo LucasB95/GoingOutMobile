@@ -61,52 +61,50 @@ namespace GoingOutMobile.Services
 
 
         }
+        public async Task<bool> LoginGoogle(string token)
+        {
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
+            client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
 
-        //public async Task<bool> LoginGoogleService()
-        //{
-        //    client.DefaultRequestHeaders.Clear();
-        //    //client.DefaultRequestHeaders.Add("SecretKey", settings.SecretKey);
-        //    client.DefaultRequestHeaders.Add("DbKey", settings.DbKey);
+            var json = JsonConvert.SerializeObject(token);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        //    var url = $"{settings.UrlBase}/Authenticate/ExternalGoogle?provider=Google";
+            var url = $"{settings.UrlBase}/Authenticate/ExternalGoogle";
 
-        //    //var loginRequest = "Google";
+            var response = await client.PostAsync(url, content);
 
-        //    //var json = JsonConvert.SerializeObject(loginRequest);
-        //    //var content = new StringContent(json, Encoding.UTF8, "application/json");
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.Unauthorized)
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Mensaje de error: {errorMessage}");
+                //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
+            }
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return false;
+            }
 
-        //    //var response = await client.PostAsync(url, content);
-        //    var response = await client.GetAsync(url);
 
-        //    if (!response.IsSuccessStatusCode)
-        //    {
-        //        var errorMessage = await response.Content.ReadAsStringAsync();
-        //        throw new HttpRequestException($"Mensaje de error: {errorMessage}");
-        //        //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
-        //    }
+            var jsonResult = await response.Content.ReadAsStringAsync();
 
-        //    var resultado = await _mercadoPagoService.preparandoMP();
+            var resultado = JsonConvert.DeserializeObject<UserResponse>(jsonResult);
 
-        //    var uri = new Uri(resultado[1]);
-        //    await Browser.Default.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
+            if (resultado != null && resultado.message.Contains("MSG_LOGIN_OK"))
+            {
+                Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
+                Preferences.Set("IdUser", resultado.id);
+            }
+            else
+            {
+                return false;
+            }
 
-        //    var jsonResult = await response.Content.ReadAsStringAsync();
+            return true;
 
-        //    var resultado = JsonConvert.DeserializeObject<UserResponse>(jsonResult);
-
-        //    if (resultado != null && resultado.message.Contains("MSG_LOGIN_OK"))
-        //    {
-        //        //Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
-        //        //Preferences.Set("IdUser", resultado.id);
-        //        //Preferences.Set("userName", loginRequest.userName);
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
+        }
+        
 
         public async Task<bool> Logout(string IdUser)
         {

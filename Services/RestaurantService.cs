@@ -148,16 +148,21 @@ namespace GoingOutMobile.Services
 
             var uri = $"{settings.UrlBase}/Favorites/{idUser}";
 
-            var resultado = await client.GetAsync(uri);
+            var response = await client.GetAsync(uri);
 
-            if (!resultado.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode && response.StatusCode != System.Net.HttpStatusCode.NotFound)
             {
-                var errorMessage = await resultado.Content.ReadAsStringAsync();
+                var errorMessage = await response.Content.ReadAsStringAsync();
                 throw new HttpRequestException($"Mensaje de error: {errorMessage}");
                 //throw new HttpRequestException($"La solicitud HTTP no fue exitosa. Código de estado: {response.StatusCode}. Mensaje de error: {errorMessage}");
             }
 
-            var jsonResult = await resultado.Content.ReadAsStringAsync();
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return new List<RestaurantResponse>();
+            }
+
+            var jsonResult = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<List<RestaurantResponse>>(jsonResult);
         }

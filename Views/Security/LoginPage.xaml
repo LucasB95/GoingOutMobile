@@ -121,7 +121,7 @@
                     </Border.GestureRecognizers>
                 </Border>
 
-                <!--<Border StrokeThickness="3"
+                <Border StrokeThickness="3"
                 StrokeShape="RoundRectangle 40,0,0,40"
                 Background="WhiteSmoke"                
                 WidthRequest="350"
@@ -137,8 +137,8 @@
                     <HorizontalStackLayout
                       >
                         <Image Source="logogoogle" 
-                           HeightRequest="30" 
-                           WidthRequest="30" 
+                           HeightRequest="25" 
+                           WidthRequest="25" 
                            Margin="10,0,0,0"
                            VerticalOptions="Center" />
                         <Label Text="Continuar con Google"
@@ -151,9 +151,9 @@
                     </HorizontalStackLayout>
 
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding LoginGoogleMethodCommand}"/>
+                        <TapGestureRecognizer Tapped="LoginGoogle_Clicked"/>
                     </Border.GestureRecognizers>
-                </Border>-->
+                </Border>
 
 
 
