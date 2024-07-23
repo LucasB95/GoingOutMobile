@@ -84,6 +84,7 @@ namespace GoingOutMobile.ViewModels
 
                     if (resultado)
                     {
+                        await Shell.Current.DisplayAlert("Mensaje", "El usuario " + createUser.userName + "se creo correctamente", "Aceptar");
                         Application.Current.MainPage = new AppShell();
                     }
                     else
