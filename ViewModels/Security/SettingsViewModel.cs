@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Maui.ApplicationModel.Communication;
+using GoingOutMobile.GoogleAuth;
 
 namespace GoingOutMobile.ViewModels
 {
@@ -24,14 +25,16 @@ namespace GoingOutMobile.ViewModels
 
         private readonly INavegacionService _navegacionService;
         private readonly SecurityService _securityService;
+        private readonly IGoogleAuthService _googleAuthService;
 
 
-        public SettingsViewModel(INavegacionService navegacionService, SecurityService securityService)
+        public SettingsViewModel(INavegacionService navegacionService, SecurityService securityService, IGoogleAuthService googleAuthService)
         {
             _navegacionService = navegacionService;
             _securityService = securityService;
             NombreUsuario = Preferences.Get("userName", string.Empty);
             Correoelectronico = Preferences.Get("Email", string.Empty);
+            _googleAuthService = googleAuthService;
         }
 
         [RelayCommand]
@@ -45,7 +48,7 @@ namespace GoingOutMobile.ViewModels
                     string subject = "Ayuda/Consulta";
                     string body = "Necesito contactarme con alguien de Soporte. \n " +
                                   "Escribe tu consulta: \n";
-                    string[] recipients = new[] { "soportegoingout@gmail.com"};
+                    string[] recipients = new[] { "soportegoingout@gmail.com" };
 
                     var message = new EmailMessage
                     {
@@ -73,15 +76,19 @@ namespace GoingOutMobile.ViewModels
 
         [RelayCommand]
         async Task ChangePass()
-        {           
+        {
             var uri = $"{nameof(ChangePasswordPage)}";
             await _navegacionService.GoToAsync(uri);
 
         }
-        
+
         [RelayCommand]
         async Task SalirSesion()
         {
+            bool LogueoGoogle = bool.Parse(Preferences.Get("LogueoGoogle", "true"));
+
+            if (LogueoGoogle) { await _googleAuthService.LogoutAsync(); }
+
             var IdUser = Preferences.Get("IdUser", string.Empty);
             await _securityService.Logout(IdUser);
             Preferences.Set("tokenGoingOut", string.Empty);

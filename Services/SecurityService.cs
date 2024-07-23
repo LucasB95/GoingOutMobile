@@ -51,6 +51,7 @@ namespace GoingOutMobile.Services
                 Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
                 Preferences.Set("IdUser", resultado.id);
                 Preferences.Set("userName", loginRequest.userName);
+                Preferences.Set("LogueoGoogle", "false");
             }
             else
             {
@@ -95,6 +96,7 @@ namespace GoingOutMobile.Services
             {
                 Preferences.Set("tokenGoingOut", resultado.tokenGoingOut);
                 Preferences.Set("IdUser", resultado.id);
+                Preferences.Set("LogueoGoogle", "true");
             }
             else
             {

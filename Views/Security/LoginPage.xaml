@@ -128,7 +128,7 @@
                 HeightRequest="50">
                     <Border.Stroke>
                         <LinearGradientBrush EndPoint="0,1">
-                            <GradientStop Color="Black"
+                            <GradientStop Color="Teal"
                           Offset="0.1" />
                             <GradientStop Color="Teal"
                           Offset="1.0" />
@@ -137,16 +137,16 @@
                     <HorizontalStackLayout
                       >
                         <Image Source="logogoogle" 
-                           HeightRequest="25" 
-                           WidthRequest="25" 
-                           Margin="10,0,0,0"
+                           HeightRequest="20" 
+                           WidthRequest="20" 
+                           Margin="30,0,0,0"
                            VerticalOptions="Center" />
                         <Label Text="Continuar con Google"
                            TextColor="Black"
                            FontSize="Medium"
                            FontAttributes="Bold"
                            VerticalOptions="Center"
-                           Margin="20,0,0,0"
+                           Margin="10,0,0,0"
                         />
                     </HorizontalStackLayout>
 
