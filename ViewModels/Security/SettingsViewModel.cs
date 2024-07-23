@@ -85,7 +85,7 @@ namespace GoingOutMobile.ViewModels
         [RelayCommand]
         async Task SalirSesion()
         {
-            bool LogueoGoogle = bool.Parse(Preferences.Get("LogueoGoogle", "true"));
+            bool LogueoGoogle = bool.Parse(Preferences.Get("LogueoGoogle", string.Empty));
 
             if (LogueoGoogle) { await _googleAuthService.LogoutAsync(); }
 
