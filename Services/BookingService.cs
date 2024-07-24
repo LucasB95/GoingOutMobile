@@ -14,7 +14,6 @@ namespace GoingOutMobile.Services
         private readonly INavegacionService _navegacionService;
         private bool _userLoggedIn = false;
         private Timer _timer;
-
         public BookingService(IRestaurantService restaurantService, INavegacionService navegacionService)
         {
             _restaurantService = restaurantService;
@@ -43,20 +42,25 @@ namespace GoingOutMobile.Services
 
             if (listBooking != null)
             {
-                bool MostrarMGS = listBooking.Any(x => x.BookingComplete == false);
+                bool MostrarMGS = listBooking.Any(x => x.BookingComplete == false && x.Date > DateTime.Now);
                 int ReservasPendientesAPI = listBooking
-                    .Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient))
+                    .Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient) && x.Date > DateTime.Now)
                     .Count();
 
                 int ReservasPendientes = !String.IsNullOrEmpty(Preferences.Get("ReservasPendientes", string.Empty))
                     ? int.Parse(Preferences.Get("ReservasPendientes", string.Empty))
                     : 0;
 
-                if (ReservasPendientes == 0 && ReservasPendientesAPI > 0) { Preferences.Set("ReservasPendientes", ReservasPendientesAPI.ToString()); }
+                if (ReservasPendientes == 0 && ReservasPendientesAPI > 0)
+                {
+                    Preferences.Set("ReservasPendientes", ReservasPendientesAPI.ToString());
+                }
 
-                //ReservasMSG = false; // Asegúrate de declarar esto donde sea necesario en tu clase o servicio
+                ReservasPendientes = ReservasPendientes == 0 ? ReservasPendientesAPI : ReservasPendientes;
 
-                if ((MostrarMGS && ReservasPendientes > 0) && (ReservasPendientesAPI != ReservasPendientes))
+                bool cambiosDetectados = MostrarMGS && (ReservasPendientes > 0) && (ReservasPendientesAPI != ReservasPendientes);
+
+                if (cambiosDetectados)
                 {
                     ReservasMSG = true;
                     bool usuarioAcepto = await DisplayAlertOnMainThread("Reservas", "Revise el estado de sus reservas pendientes ya que se detecto respuesta. ¿Quiere verlas?", "Sí", "No");

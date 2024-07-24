@@ -84,16 +84,11 @@ namespace GoingOutMobile.ViewModels
                     {
                         ReserveCollection = new ObservableCollection<Booking>(reserveList.OrderBy(x => x.Date));
 
-                        int ReservasPendientes = reserveList.Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient) && x.Date > DateTime.Now).ToList().Count();
+                        int ReservasPendientes = reserveList.Where(x => x.StateClient == false && String.IsNullOrEmpty(x.DescriptionStateClient) && x.Date > DateTime.Now).Count();
 
                         if (ReservasPendientes > 0)
-                        {
-                            Preferences.Set("ReservasPendientes", ReservasPendientes.ToString());
-                        }
-                        else
-                        {
-                            Preferences.Set("ReservasPendientes", string.Empty);
-                        }
+                        { Preferences.Set("ReservasPendientes", ReservasPendientes.ToString()); }
+                        else { Preferences.Set("ReservasPendientes", string.Empty); }
 
                     }
                     else
