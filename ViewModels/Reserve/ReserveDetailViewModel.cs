@@ -263,9 +263,9 @@ namespace GoingOutMobile.ViewModels
                                                     && x.AmountPeople == bookingResponse.AmountPeople);
                     }
 
-                    if (ValidoReserva)
+                    if (!ValidoReserva)
                     {
-                        await Shell.Current.DisplayAlert("Mensaje", "Ya existe una reserva para ese dia y con esa hora", "Aceptar");
+                        await Shell.Current.DisplayAlert("Mensaje", "Ya existe una reserva para ese dia y con esa hora no se pudo modificar", "Aceptar");
                     }
                     else
                     {
