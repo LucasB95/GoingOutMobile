@@ -124,9 +124,13 @@ namespace GoingOutMobile.ViewModels
 
                             if (await _restaurantService.NewReserve(bookingCreate))
                             {
-                                //Llevar a la lista de reservas desde el menu costadp
-                                var uri = $"//{nameof(ReserveListPage)}?page=Booking";
-                                await _navegacionService.GoToAsync(uri);
+                                await Application.Current.MainPage.DisplayAlert("¡Éxito!", "La reserva se generó exitosamente", "OK");
+
+                                // Navegar a la HomePage
+                                await _navegacionService.GoToAsync($"//{nameof(HomePage)}");
+                                //Llevar a la lista de reservas desde el menu costado
+                                //var uri = $"//{nameof(ReserveListPage)}?page=Booking";
+                                //await _navegacionService.GoToAsync(uri);
 
                             }
                             else

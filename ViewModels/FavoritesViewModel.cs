@@ -70,7 +70,7 @@ namespace GoingOutMobile.ViewModels
 
             try
             {
-                IsBusy = true;
+                IsBusy = IsRefreshing = true;
                 var UserId = Preferences.Get("IdUser", string.Empty);
                 var listBooking = await _restaurantService.GetFavorites(UserId);
 
@@ -86,7 +86,7 @@ namespace GoingOutMobile.ViewModels
             }
             finally
             {
-                IsBusy = false;
+                IsBusy = IsRefreshing = false;
             }
         }
 

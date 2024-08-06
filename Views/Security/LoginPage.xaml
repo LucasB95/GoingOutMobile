@@ -135,11 +135,11 @@
                         </LinearGradientBrush>
                     </Border.Stroke>
                     <HorizontalStackLayout
+                        HorizontalOptions="Center"
                       >
                         <Image Source="logogoogle" 
                            HeightRequest="20" 
                            WidthRequest="20" 
-                           Margin="30,0,0,0"
                            VerticalOptions="Center" />
                         <Label Text="Continuar con Google"
                            TextColor="Black"
